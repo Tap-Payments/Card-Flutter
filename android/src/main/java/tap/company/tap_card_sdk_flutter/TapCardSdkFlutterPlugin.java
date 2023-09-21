@@ -10,6 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.annotation.NonNull;
+
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugin.common.MethodChannel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +31,18 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 
+import android.content.ContextWrapper;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
+import android.os.Bundle;
+
 /**
  * TapCardSdkFlutterPlugin
  */
-public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAware {
+public class TapCardSdkFlutterPlugin implements FlutterPlugin, ActivityAware {
 
 
     /**
@@ -119,7 +132,7 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
      * class properties
      */
     private MethodChannel channel;
-    private TapCardSDKDelegate delegate;
+
     private FlutterPluginBinding pluginBinding;
     private ActivityPluginBinding activityBinding;
     private Application application;
@@ -128,27 +141,14 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
     private Lifecycle lifecycle;
     private LifeCycleObserver observer;
     private static final String CHANNEL = "tap_card_sdk_flutter";
+//    private static final String CHANNEL = "samples.flutter.dev/battery";
+
 
     /**
      * Register with
      *
      * @param registrar
      */
-
-    public static void registerWith(PluginRegistry.Registrar registrar) {
-        if (registrar.activity() == null) {
-            // If a background flutter view tries to register the plugin, there will be no activity from the registrar,
-            // we stop the registering process immediately because the SDK requires an activity.
-            return;
-        }
-        Activity activity = registrar.activity();
-        Application application = null;
-        if (registrar.context() != null) {
-            application = (Application) (registrar.context().getApplicationContext());
-        }
-        TapCardSdkFlutterPlugin plugin = new TapCardSdkFlutterPlugin();
-        plugin.setup(registrar.messenger(), application, activity, registrar, null);
-    }
 
 
     /**
@@ -165,11 +165,8 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
      */
     @Override
     public void onAttachedToEngine(FlutterPluginBinding binding) {
-
         TapCardKitFactory tapCardKitFactory;
-        tapCardKitFactory = new TapCardKitFactory();
-
-
+        tapCardKitFactory = new TapCardKitFactory(binding.getBinaryMessenger());
         pluginBinding = binding;
 
         System.out.println("View Type ID >>>>>>>");
@@ -187,17 +184,10 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
     @Override
     public void onAttachedToActivity(ActivityPluginBinding binding) {
         activityBinding = binding;
-        setup(
-                pluginBinding.getBinaryMessenger(),
-                (Application) pluginBinding.getApplicationContext(),
-                activityBinding.getActivity(),
-                null,
-                activityBinding);
     }
 
     @Override
     public void onDetachedFromActivity() {
-        tearDown();
     }
 
     @Override
@@ -215,59 +205,6 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
      * setup
      */
 
-    private void setup(
-            final BinaryMessenger messenger,
-            final Application application,
-            final Activity activity,
-            final PluginRegistry.Registrar registrar,
-            final ActivityPluginBinding activityBinding) {
-        this.activity = activity;
-        this.application = application;
-        this.delegate = constructDelegate(activity);
-        channel = new MethodChannel(messenger, "tap_card_sdk_flutter");
-        channel.setMethodCallHandler(this);
-        observer = new LifeCycleObserver(activity);
-        if (registrar != null) {
-            // V1 embedding setup for activity listeners.
-            application.registerActivityLifecycleCallbacks(observer);
-            registrar.addActivityResultListener(delegate);
-            registrar.addRequestPermissionsResultListener(delegate);
-        } else {
-            // V2 embedding setup for activity listeners.
-            activityBinding.addActivityResultListener(delegate);
-            activityBinding.addRequestPermissionsResultListener(delegate);
-//            lifecycle = FlutterLifecycleAdapter.getActivityLifecycle(activityBinding);
-//            lifecycle.addObserver(observer);
-        }
-    }
-
-
-    /**
-     * tearDown()
-     */
-    private void tearDown() {
-        activityBinding.removeActivityResultListener(delegate);
-        activityBinding.removeRequestPermissionsResultListener(delegate);
-        activityBinding = null;
-        if (lifecycle != null)
-            lifecycle.removeObserver(observer);
-        lifecycle = null;
-        delegate = null;
-        channel.setMethodCallHandler(null);
-        channel = null;
-        application.unregisterActivityLifecycleCallbacks(observer);
-        application = null;
-    }
-
-
-    /**
-     * construct delegate
-     */
-
-    private TapCardSDKDelegate constructDelegate(final Activity setupActivity) {
-        System.out.println("Construct delegate :");
-        return new TapCardSDKDelegate(setupActivity);
-    }
 
     /**
      * MethodChannel.Result wrapper that responds on the platform thread.
@@ -312,26 +249,43 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
         }
     }
 
-    @Override
-    public void onMethodCall(MethodCall call, MethodChannel.Result rawResult) {
-        HashMap<String, Object> args = call.arguments();
-        System.out.println("args : " + args);
-        System.out.println("onMethodCall..... started");
-        if (activity == null) {
-            rawResult.error("no_activity", "SDK plugin requires a foreground activity.", null);
-            return;
-        }
+//    @Override
+//    public void onMethodCall(MethodCall call, MethodChannel.Result rawResult) {
+//        HashMap<String, Object> args = call.arguments();
+//        System.out.println("args : " + args);
+//        System.out.println("onMethodCall..... started");
+//        if (activity == null) {
+//            rawResult.error("no_activity", "SDK plugin requires a foreground activity.", null);
+//            return;
+//        }
+//
+//        if (call.method.equals("terminate_session")) {
+//            System.out.println("terminate session!");
+//            //  delegate.terminateSDKSession();
+//            return;
+//        }
+//        MethodChannel.Result result = new MethodResultWrapper(rawResult);
+//       // result.success("Success");
+//        delegate.start(activity, result, args);
+//
+//        // delegate.setupConfiguration();
+//
+//    }
 
-        if (call.method.equals("terminate_session")) {
-            System.out.println("terminate session!");
-            //  delegate.terminateSDKSession();
-            return;
-        }
-        MethodChannel.Result result = new MethodResultWrapper(rawResult);
-        // delegate.setupConfiguration();
-        // delegate.start(activity, result, args);
-
-    }
+//    private int getBatteryLevel() {
+//        int batteryLevel = -1;
+//        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+//            BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+//            batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+//        } else {
+//            Intent intent = new ContextWrapper(activity).
+//                    registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+//            batteryLevel = (intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) * 100) /
+//                    intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+//        }
+//
+//        return batteryLevel;
+//    }
 }
 
 

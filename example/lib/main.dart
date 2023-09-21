@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
+import 'dart:ffi';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tap_card_sdk_flutter/tap_card_sdk_flutter.dart';
 
@@ -16,58 +17,93 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _tapCardSdkFlutterPlugin = TapCardSdkFlutter();
-
   @override
   void initState() {
     super.initState();
-    // initPlatformState();
+    setupConfiguration();
+    Future.delayed(const Duration(seconds: 2), () {
+      getTapToken();
+    });
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
+  setupConfiguration() {
+    TapCardSdkFlutter.setupConfiguration(
+      merchant: "",
+      transactionAmount: "1",
+      transactionCurrency: "SAR",
+      phoneCountryCode: "+20",
+      phoneNumber: "011",
+      contactEmail: "test@gmail.com",
+      nameFirst: "Muhammad",
+      nameMiddle: "Azhar",
+      nameLast: "Maqbool",
+      nameLang: "en",
+      customerNameOnCard: "test",
+      customerEditable: "true",
+      acceptanceSupportedBrands: [
+        "MADA",
+        "VISA2",
+        "MASTERCARD",
+        "AMEX",
+      ],
+      acceptanceSupportedCards: [
+        "CREDIT",
+        "DEBIT",
+      ],
+      fieldsCardHolder: "true",
+      addonsLoader: true,
+      addonsSaveCard: true,
+      addonsDisplayPaymentBrands: true,
+      addonsScanner: true,
+      addonsNFC: true,
+      referenceTransaction: "tck_LV02G1729746334Xj5469435",
+      referenceOrder: "77302326303771481",
+      authChannel: "PAYER_BROWSER",
+      authPurpose: "PAYMENT_TRANSACTION",
+      invoiceID: "",
+      postID: "",
+      authenticationDescription: "description",
+      interfaceLocale: "en",
+      interfaceTheme: "light",
+      interfaceEdges: "curved",
+      interfaceDirection: "ltr",
+      publicKey: "pk_test_Vlk842B1EA7tDN5QbrfGjYzh",
+      scope: "Authenticate",
+    );
+  }
+
+  double height = 110;
+
+  var mSDKResponse;
+
+  Future<void> getTapToken() async {
     try {
-      platformVersion = await _tapCardSdkFlutterPlugin.getPlatformVersion() ??
-          'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      var tapGooglePaySDKResult = await TapCardSdkFlutter.startTapCardSDK;
+
+      setState(() {
+        mSDKResponse = tapGooglePaySDKResult;
+      });
+
+      print("Tap Token Response >>>>>> $mSDKResponse");
+    } catch (ex) {
+      if (kDebugMode) {
+        print("Exception >>>> ${ex.toString()}");
+      }
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: const Center(
-          child: AndroidView(
-            viewType: "plugin/tap_card_sdk",
-            creationParams: {
-              "type": "hey",
-              "id": 123,
-            },
-            creationParamsCodec: StandardMessageCodec(),
-            layoutDirection: TextDirection.ltr,
-          ),
-        ),
-        bottomNavigationBar: ElevatedButton(
-          onPressed: () {},
-          child: const Text("Click on me"),
+        body: TapCardSdkFlutter.tapCardSDKView(
+          height: height,
         ),
       ),
     );

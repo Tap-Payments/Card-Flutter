@@ -22,7 +22,7 @@ public class TapCardSdkFlutterPluginTest {
 
     final MethodCall call = new MethodCall("getPlatformVersion", null);
     MethodChannel.Result mockResult = mock(MethodChannel.Result.class);
-    plugin.onMethodCall(call, mockResult);
+   // plugin.onMethodCall(call, mockResult);
 
     verify(mockResult).success("Android " + android.os.Build.VERSION.RELEASE);
   }
