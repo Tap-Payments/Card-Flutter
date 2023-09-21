@@ -20,7 +20,7 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    TapCardSdkFlutter tapCardSdkFlutterPlugin = TapCardSdkFlutter();
+  //  TapCardSdkFlutter tapCardSdkFlutterPlugin = TapCardSdkFlutter();
     MockTapCardSdkFlutterPlatform fakePlatform = MockTapCardSdkFlutterPlatform();
     TapCardSdkFlutterPlatform.instance = fakePlatform;
 

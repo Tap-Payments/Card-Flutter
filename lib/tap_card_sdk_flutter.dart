@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TapCardSdkFlutter {
+  TapCardSdkFlutter._() {
+    _channel.setMethodCallHandler(_fromNative);
+  }
+
   static final Map<dynamic, dynamic> _tapCheckoutSDKResult =
       <dynamic, dynamic>{};
 
@@ -22,6 +26,26 @@ class TapCardSdkFlutter {
       print("Result >>>>>> $result");
     }
     return result;
+  }
+
+static   Future<bool> callTest() async {
+    bool res = false;
+
+    try {
+      res = await _channel.invokeMethod('myMethod') == 1;
+    } on PlatformException catch (e) {
+      print('Error = $e');
+    }
+
+    print('Is call successful? $res');
+    return res;
+  }
+
+  Future<void> _fromNative(MethodCall call) async {
+    print("Coming in native block");
+    if (call.method == 'callTestResuls') {
+      print('callTest result = ${call.arguments}');
+    }
   }
 
   static Map<String, dynamic> sdkConfigurations = {};

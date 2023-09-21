@@ -1,8 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:tap_card_sdk_flutter/tap_card_sdk_flutter.dart';
 
 void main() {
@@ -78,7 +75,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> getTapToken() async {
     try {
-      var tapGooglePaySDKResult = await TapCardSdkFlutter.startTapCardSDK;
+      var tapGooglePaySDKResult = await TapCardSdkFlutter.callTest();
 
       setState(() {
         mSDKResponse = tapGooglePaySDKResult;
