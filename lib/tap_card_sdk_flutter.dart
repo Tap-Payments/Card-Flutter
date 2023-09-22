@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TapCardSdkFlutter {
-  TapCardSdkFlutter._() {
-    _channel.setMethodCallHandler(_fromNative);
-  }
-
   static final Map<dynamic, dynamic> _tapCheckoutSDKResult =
       <dynamic, dynamic>{};
 
@@ -14,37 +10,57 @@ class TapCardSdkFlutter {
   static const MethodChannel _channel = MethodChannel('tap_card_sdk_flutter');
 
   static Future<dynamic> get startTapCardSDK async {
+    try {
+      debugPrint("SDK Configuration >>>>>> $sdkConfigurations");
+      dynamic result = await _channel.invokeMethod(
+        'start',
+        {
+          "configuration": sdkConfigurations,
+        },
+      );
+
+      debugPrint("Start SDK Response >>>>>> $result");
+      return result;
+    } catch (ex) {
+      debugPrint("Start SDK 2 Exception >>>>>> $ex");
+    }
+  }
+
+  static Future<dynamic> get startTapCardSDK2 async {
+    try {
+      debugPrint("SDK Configuration >>>>>> $sdkConfigurations");
+
+      dynamic result = await _channel.invokeMethod(
+        'start2',
+        {
+          "configuration": sdkConfigurations,
+        },
+      );
+      debugPrint("Start SDK 2 Response >>>>>> $result");
+
+      return result;
+    } catch (ex) {
+      debugPrint("Start SDK 2 Exception >>>>>> $ex");
+    }
+  }
+
+  static Future<dynamic> get generateTapToken async {
     //  if (!_validateAppConfig()) return _tapCheckoutSDKResult;
 
-    dynamic result = await _channel
-        .invokeMethod('start', {"configuration": sdkConfigurations});
-    if (kDebugMode) {
-      print("Configuration =>$sdkConfigurations");
-    }
-
-    if (kDebugMode) {
-      print("Result >>>>>> $result");
-    }
-    return result;
-  }
-
-static   Future<bool> callTest() async {
-    bool res = false;
-
     try {
-      res = await _channel.invokeMethod('myMethod') == 1;
-    } on PlatformException catch (e) {
-      print('Error = $e');
-    }
+      debugPrint("SDK Configuration >>>>>> $sdkConfigurations");
+      dynamic result = await _channel.invokeMethod(
+        'generateToken',
+        {
+          "configuration": sdkConfigurations,
+        },
+      );
 
-    print('Is call successful? $res');
-    return res;
-  }
+      debugPrint("Generate Tap Token Response >>>>>> $result");
 
-  Future<void> _fromNative(MethodCall call) async {
-    print("Coming in native block");
-    if (call.method == 'callTestResuls') {
-      print('callTest result = ${call.arguments}');
+      return result;
+    } catch (ex) {
+      debugPrint("Generate Tap Token Exception >>>>>> $ex");
     }
   }
 
@@ -128,24 +144,16 @@ static   Future<bool> callTest() async {
     required double height,
   }) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return Column(
-        children: [
-          SizedBox(
-            height: height,
-            child: AndroidView(
-              viewType: "plugin/tap_card_sdk",
-              creationParams: TapCardSdkFlutter.sdkConfigurations,
-              creationParamsCodec: const StandardMessageCodec(),
-              layoutDirection: TextDirection.ltr,
-            ),
-          ),
-        ],
+      return SizedBox(
+        height: height,
+        child: AndroidView(
+          viewType: "plugin/tap_card_sdk",
+          creationParams: TapCardSdkFlutter.sdkConfigurations,
+          creationParamsCodec: const StandardMessageCodec(),
+          layoutDirection: TextDirection.ltr,
+        ),
       );
     }
     return const SizedBox();
   }
-
-// Future<String?> getPlatformVersion() {
-//   return TapCardSdkFlutterPlatform.instance.getPlatformVersion();
-// }
 }

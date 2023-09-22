@@ -302,10 +302,13 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
 
         @Override
         public void notImplemented() {
+            System.out.println("Not implemented.................");
             handler.post(
                     () -> methodResult.notImplemented());
         }
     }
+
+    MethodChannel.Result result;
 
     @Override
     public void onMethodCall(MethodCall call, MethodChannel.Result rawResult) {
@@ -322,22 +325,20 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
             return;
         }
 
-        MethodChannel.Result result = new MethodResultWrapper(rawResult);
-//        System.out.println("Before method call");
-//        if (call.method.equals("myMethod")) {
-//            System.out.println("My method calls");
-//            result.success(1);
-//            generateResults();
-//        }
+        result = new MethodResultWrapper(rawResult);
 
-         delegate.start(activity, result, args,pluginBinding.getBinaryMessenger());
-
-    }
-
-    private void generateResults() {
-        System.out.println("generate result");
-        for (int i = 0; i < 10; i++) {
-            channel.invokeMethod("callTestResuls", i);
+        if (call.method.equals("generateToken")) {
+            delegate.generateTapToken(activity, result, args);
         }
+
+        if (call.method.equals("start")) {
+            delegate.start(activity, result, args);
+
+        } else {
+            delegate.pendingResult = result;
+        }
+
+
     }
+
 }
