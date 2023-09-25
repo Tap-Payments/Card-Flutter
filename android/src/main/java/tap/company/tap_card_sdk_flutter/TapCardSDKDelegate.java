@@ -120,15 +120,15 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
              */
             Map<String, Object> acceptance = new HashMap<>();
 
-            List<String> myList;
-            myList = (List<String>) configuration.get("supportedBrands");
+            List<String> supportedBrandList;
+            supportedBrandList = (List<String>) configuration.get("supportedBrands");
 
 
-            List<String> myList2 = new ArrayList<>();
-            myList2 = (List<String>) configuration.get("supportedCards");
+            List<String> supportedCardsList = new ArrayList<>();
+            supportedCardsList = (List<String>) configuration.get("supportedCards");
 
-            acceptance.put("supportedBrands", myList);
-            acceptance.put("supportedCards", myList2);
+            acceptance.put("supportedBrands", supportedBrandList);
+            acceptance.put("supportedCards", supportedCardsList);
 
             /**
              * fields
@@ -190,12 +190,12 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
             /**
              * interface
              */
-            Map<String, Object> interf = new HashMap<>();
+            Map<String, Object> interfaces = new HashMap<>();
 
-            interf.put("locale", configuration.get("locale"));
-            interf.put("theme", configuration.get("theme"));
-            interf.put("edges", configuration.get("edges"));
-            interf.put("direction", configuration.get("direction"));
+            interfaces.put("locale", configuration.get("locale"));
+            interfaces.put("theme", configuration.get("theme"));
+            interfaces.put("edges", configuration.get("edges"));
+            interfaces.put("direction", configuration.get("direction"));
 
 
             request.put("acceptance", acceptance);
@@ -203,7 +203,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
             request.put("merchant", merchant);
             request.put("transaction", transaction);
             request.put("customer", customer);
-            request.put("interface", interf);
+            request.put("interface", interfaces);
             request.put("addons", addons);
             request.put("fields", fields);
             request.put("scope", configuration.get("scope"));
