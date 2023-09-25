@@ -107,10 +107,10 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> generateTapToken() async {
     try {
-      var tapGooglePaySDKResult2 = await TapCardSdkFlutter.generateTapToken;
-      debugPrint("Tap generateToken Response >>>>>> $tapGooglePaySDKResult2");
+      var tapGenerateTapTokenResult = await TapCardSdkFlutter.generateTapToken;
+      debugPrint("Tap generateToken Response >>>>>> $tapGenerateTapTokenResult");
 
-      handleCallbacks(tapGooglePaySDKResult2);
+      handleCallbacks(tapGenerateTapTokenResult);
     } catch (ex) {
       if (kDebugMode) {
         print("Exception >>>> ${ex.toString()}");
