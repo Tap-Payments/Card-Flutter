@@ -73,7 +73,7 @@ Creates a configuration model to be passed to the SDK
 
 ## Initialization of the input
 
-### Initialize as a  Dictionary 
+### Initialize as a  Dictionary as HashMap
 You can create a Dictionary HashMap to pass the data to our sdk. The good part about this, is that you can generate the data from one of your apis. Whenever we have an update to the configurations, you can update your api. This will make sure, that you will not have to update your app on the Google Play Store.
 ```dart
 sdkConfigurations = <String, dynamic>{
@@ -112,4 +112,25 @@ sdkConfigurations = <String, dynamic>{
       "scope": scope,
     };
 
+```
+# Initializing the TapCardSDK form
+
+```dart
+  // CardForm Widget from TapCardSDK
+  static Widget tapCardSDKView({
+    required double height,
+  }) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return SizedBox(
+        height: height,
+        child: AndroidView(
+          viewType: "plugin/tap_card_sdk",
+          creationParams: TapCardSdkFlutter.sdkConfigurations,
+          creationParamsCodec: const StandardMessageCodec(),
+          layoutDirection: TextDirection.ltr,
+        ),
+      );
+    }
+    return const SizedBox();
+  }
 ```

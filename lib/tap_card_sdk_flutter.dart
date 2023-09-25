@@ -139,7 +139,7 @@ class TapCardSdkFlutter {
     };
   }
 
-  // Google pay Button Widget from TapGooglePaySDK
+  // CardForm Widget from TapCardSDK
   static Widget tapCardSDKView({
     required double height,
   }) {
