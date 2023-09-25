@@ -10,7 +10,8 @@ We got you covered, `TapCardSDK` can be installed with all possible technologies
 
 <a name="installation_with_pubspec"></a>
 
-### Include goSellSDK plugin as a dependency in your pubspec.yaml
+### Include tapCardFlutterSDK plugin as 
+a dependency in your pubspec.yaml
 
 ```dart
  dependencies:
@@ -69,3 +70,46 @@ Creates a configuration model to be passed to the SDK
 | fields| Needed to define visibility of the optional fields in the card form. | False  | `Fields`| ` var fields:Fields = Fields(cardHolder= true)` |
 | addons| Needed to define the enabling of some extra features on top of the basic card form. | False  | `Addons`| ` var addons:Addons = Addons(displayPaymentBrands= true, loader= true,scanner= true)` `/**- displayPaymentBrands: Defines to show the supported card brands logos - loader: Defines to show a loader on top of the card when it is in a processing state - scanner: Defines whether to enable card scanning functionality or not*/`|
 | interface| Needed to defines look and feel related configurations. | False  | `Interface`| ` var  interface:Interface = Interface(locale= "en", theme= "light", edges= "curved", direction= "dynamic")` |
+
+## Initialization of the input
+
+### Initialize as a  Dictionary 
+You can create a Dictionary HashMap to pass the data to our sdk. The good part about this, is that you can generate the data from one of your apis. Whenever we have an update to the configurations, you can update your api. This will make sure, that you will not have to update your app on the Google Play Store.
+```dart
+sdkConfigurations = <String, dynamic>{
+      "id": merchant,
+      "amount": transactionAmount,
+      "currency": transactionCurrency,
+      "countryCode": phoneCountryCode,
+      "number": phoneNumber,
+      "email": contactEmail,
+      "lang": nameLang,
+      "first": nameFirst,
+      "middle": nameMiddle,
+      "last": nameLast,
+      "nameOnCard": customerNameOnCard,
+      "editable": customerEditable,
+      "supportedBrands": acceptanceSupportedBrands,
+      "supportedCards": acceptanceSupportedCards,
+      "cardHolder": fieldsCardHolder,
+      "loader": addonsLoader,
+      "saveCard": addonsSaveCard,
+      "displayPaymentBrands": addonsDisplayPaymentBrands,
+      "scanner": addonsScanner,
+      "nfc": addonsNFC,
+      "transaction": referenceTransaction,
+      "order": referenceOrder,
+      "channel": authChannel,
+      "purpose": authPurpose,
+      "invoiceId": invoiceID,
+      "postId": postID,
+      "description": authenticationDescription,
+      "locale": interfaceLocale,
+      "theme": interfaceTheme,
+      "edges": interfaceEdges,
+      "direction": interfaceDirection,
+      "publicKey": publicKey,
+      "scope": scope,
+    };
+
+```
