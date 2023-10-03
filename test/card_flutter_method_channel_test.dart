@@ -1,12 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tap_card_sdk_flutter/tap_card_sdk_flutter_method_channel.dart';
+import 'package:card_flutter/card_flutter_method_channel.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  MethodChannelTapCardSdkFlutter platform = MethodChannelTapCardSdkFlutter();
-  const MethodChannel channel = MethodChannel('tap_card_sdk_flutter');
+  MethodChannelCardFlutter platform = MethodChannelCardFlutter();
+  const MethodChannel channel = MethodChannel('card_flutter');
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(

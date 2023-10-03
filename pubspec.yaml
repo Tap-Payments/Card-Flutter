@@ -1,16 +1,14 @@
-name: tap_card_sdk_flutter
+name: card_flutter
 description: A new Flutter project.
 version: 0.0.1
 homepage:
 
 environment:
-  sdk: '>=3.1.0 <4.0.0'
+  sdk: '>=3.1.3 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
   flutter:
-    sdk: flutter
-  flutter_web_plugins:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
 
@@ -37,15 +35,10 @@ flutter:
   plugin:
     platforms:
       android:
-        package: tap.company.tap_card_sdk_flutter
-        pluginClass: TapCardSdkFlutterPlugin
+        package: tap.company.card_flutter
+        pluginClass: CardFlutterPlugin
       ios:
-        pluginClass: TapCardSdkFlutterPlugin
-      windows:
-        pluginClass: TapCardSdkFlutterPluginCApi
-      web:
-        pluginClass: TapCardSdkFlutterWeb
-        fileName: tap_card_sdk_flutter_web.dart
+        pluginClass: CardFlutterPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

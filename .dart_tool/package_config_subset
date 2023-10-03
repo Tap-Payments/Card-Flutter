@@ -82,10 +82,10 @@ web
 3.1
 file:///Users/muhammadazharmaqbool/.pub-cache/hosted/pub.dev/web-0.1.4-beta/
 file:///Users/muhammadazharmaqbool/.pub-cache/hosted/pub.dev/web-0.1.4-beta/lib/
-tap_card_sdk_flutter
+card_flutter
 3.1
-file:///Users/muhammadazharmaqbool/AndroidStudioProjects/TapPayments/Tap-Card-SDK-Flutter/
-file:///Users/muhammadazharmaqbool/AndroidStudioProjects/TapPayments/Tap-Card-SDK-Flutter/lib/
+file:///Users/muhammadazharmaqbool/AndroidStudioProjects/TapPayments/Card-Flutter/
+file:///Users/muhammadazharmaqbool/AndroidStudioProjects/TapPayments/Card-Flutter/lib/
 sky_engine
 3.0
 file:///Users/muhammadazharmaqbool/Developer/flutter/bin/cache/pkg/sky_engine/
@@ -98,8 +98,4 @@ flutter_test
 3.0
 file:///Users/muhammadazharmaqbool/Developer/flutter/packages/flutter_test/
 file:///Users/muhammadazharmaqbool/Developer/flutter/packages/flutter_test/lib/
-flutter_web_plugins
-3.0
-file:///Users/muhammadazharmaqbool/Developer/flutter/packages/flutter_web_plugins/
-file:///Users/muhammadazharmaqbool/Developer/flutter/packages/flutter_web_plugins/lib/
 2

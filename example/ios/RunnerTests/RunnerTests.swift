@@ -2,7 +2,7 @@ import Flutter
 import UIKit
 import XCTest
 
-@testable import tap_card_sdk_flutter
+@testable import card_flutter
 
 // This demonstrates a simple unit test of the Swift portion of this plugin's implementation.
 //
@@ -11,7 +11,7 @@ import XCTest
 class RunnerTests: XCTestCase {
 
   func testGetPlatformVersion() {
-    let plugin = TapCardSdkFlutterPlugin()
+    let plugin = CardFlutterPlugin()
 
     let call = FlutterMethodCall(methodName: "getPlatformVersion", arguments: [])
 

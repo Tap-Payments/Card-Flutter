@@ -1,4 +1,4 @@
-package tap.company.tap_card_sdk_flutter;
+package tap.company.card_flutter;
 
 import android.app.Activity;
 import android.app.Application;
@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
@@ -40,9 +41,9 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 
 /**
- * TapCardSdkFlutterPlugin
+ * CardFlutterPlugin
  */
-public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAware {
+public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAware {
 
 
     /**
@@ -131,7 +132,7 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
     // This is null when not using v2 embedding;
     private Lifecycle lifecycle;
     private LifeCycleObserver observer;
-    private static final String CHANNEL = "tap_card_sdk_flutter";
+    // private static final String CHANNEL = "card_flutter";
 
     /**
      * Register with
@@ -150,7 +151,7 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
         if (registrar.context() != null) {
             application = (Application) (registrar.context().getApplicationContext());
         }
-        TapCardSdkFlutterPlugin plugin = new TapCardSdkFlutterPlugin();
+        CardFlutterPlugin plugin = new CardFlutterPlugin();
         plugin.setup(registrar.messenger(), application, activity, registrar, null);
     }
 
@@ -160,7 +161,7 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
      *
      * <p>Use this constructor for production code.
      */
-    public TapCardSdkFlutterPlugin() {
+    public CardFlutterPlugin() {
     }
 
 
@@ -220,7 +221,7 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
         this.activity = activity;
         this.application = application;
         this.delegate = constructDelegate(activity);
-        channel = new MethodChannel(messenger, "tap_card_sdk_flutter");
+        channel = new MethodChannel(messenger, "card_flutter");
         channel.setMethodCallHandler(this);
         observer = new LifeCycleObserver(activity);
         if (registrar != null) {
@@ -326,13 +327,15 @@ public class TapCardSdkFlutterPlugin implements MethodChannel.MethodCallHandler,
         }
 
         result = new MethodResultWrapper(rawResult);
-
+        boolean generateToken = false;
         if (call.method.equals("generateToken")) {
-            delegate.generateTapToken(activity, result, args);
+            generateToken = true;
+            delegate.start(activity, result, args, generateToken);
+            //  delegate.generateTapToken(activity, result, args);
         }
 
         if (call.method.equals("start")) {
-            delegate.start(activity, result, args);
+            delegate.start(activity, result, args, generateToken);
 
         } else {
             delegate.pendingResult = result;

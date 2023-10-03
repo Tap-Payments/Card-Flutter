@@ -56,12 +56,6 @@
       "languageVersion": "3.0"
     },
     {
-      "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/muhammadazharmaqbool/Developer/flutter/packages/flutter_web_plugins",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
       "name": "lints",
       "rootUri": "file:///Users/muhammadazharmaqbool/.pub-cache/hosted/pub.dev/lints-2.1.1",
       "packageUri": "lib/",
@@ -152,13 +146,13 @@
       "languageVersion": "3.1"
     },
     {
-      "name": "tap_card_sdk_flutter",
+      "name": "card_flutter",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2023-09-18T17:16:38.883376Z",
+  "generated": "2023-10-03T10:55:28.785394Z",
   "generator": "pub",
-  "generatorVersion": "3.1.0"
+  "generatorVersion": "3.1.3"
 }

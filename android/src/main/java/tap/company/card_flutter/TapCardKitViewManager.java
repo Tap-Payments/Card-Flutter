@@ -1,4 +1,4 @@
-package tap.company.tap_card_sdk_flutter;
+package tap.company.card_flutter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

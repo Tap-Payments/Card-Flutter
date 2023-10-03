@@ -1,10 +1,10 @@
 import Flutter
 import UIKit
 
-public class TapCardSdkFlutterPlugin: NSObject, FlutterPlugin {
+public class CardFlutterPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "tap_card_sdk_flutter", binaryMessenger: registrar.messenger())
-    let instance = TapCardSdkFlutterPlugin()
+    let channel = FlutterMethodChannel(name: "card_flutter", binaryMessenger: registrar.messenger())
+    let instance = CardFlutterPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
