@@ -21,7 +21,7 @@ class TapCardKitViewManager implements PlatformView {
 
 
     TapCardKitViewManager(@NonNull Context context, int id, @Nullable Map<String, Object> creationParams) {
-        System.out.println("Params from factory class >>>>>> " + creationParams.get("amount"));
+        System.out.println("Params from factory class >>>>>> " + creationParams);
         view = LayoutInflater.from(context).inflate(R.layout.tap_card_kit_layout, null);
         tapCardKit = view.findViewById(R.id.tapCardForm);
     }

@@ -41,9 +41,36 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
 
   static const MethodChannel _channel = MethodChannel('card_flutter');
 
+  static const EventChannel _eventChannel = EventChannel('card_flutter_event');
+
+
+  void streamTimeFromNative() {
+    print("streamTimeFromNative()");
+    _eventChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
+  }
+
+  void _onEvent(dynamic event) {
+    //Receive Event
+    var data = "Start Listing..";
+    if (event.toString() != null) {
+      data = event.toString();
+    }
+    // setState(() {
+    //   counter = data;
+    // });
+    print("_onEvent ${event.toString()}");
+    handleCallbacks(event);
+  }
+
+  void _onError(dynamic event) {
+    //Receive Event
+    print("_onError ${event.toString()}");
+  }
+
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 0), () {
+      streamTimeFromNative();
       startTapCardSDK();
     });
     super.initState();
@@ -55,6 +82,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
         'start',
         {"configuration": widget.sdkConfiguration},
       );
+      debugPrint("Result >>>>>>> $result");
       handleCallbacks(result);
       _startTapCardSDK2();
       // return responseData;
@@ -98,6 +126,15 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
 
   handleCallbacks(dynamic result) {
     if (result.containsKey("onHeightChange")) {
+      var onHeightResponse = jsonDecode(result["onHeightChange"]);
+
+      debugPrint("On Height Response :::: $onHeightResponse");
+
+      setState(() {
+        height = double.parse(jsonDecode(result["onHeightChange"]).toString());
+      });
+      // onBindIdentificationFunction = widget.onBindIdentification;
+      // onBindIdentificationFunction!(resultOfBindIdentification.toString());
       /// onHeightChange Callbacks Triggered From SDK
     }
 
@@ -142,21 +179,34 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
     }
   }
 
-  double height = 120;
+  double height = 95;
 
   @override
   Widget build(BuildContext context) {
     if (widget.generateToken) {
       generateTapToken();
     }
-    return SizedBox(
-      height: height,
-      child: AndroidView(
-        viewType: "plugin/tap_card_sdk",
-        creationParams: widget.sdkConfiguration,
-        creationParamsCodec: const StandardMessageCodec(),
-        layoutDirection: TextDirection.ltr,
-      ),
-    );
+
+    if (Theme.of(context).platform == TargetPlatform.android) {
+      return SizedBox(
+        height: height,
+        child: AndroidView(
+          viewType: "plugin/tap_card_sdk",
+          creationParams: widget.sdkConfiguration,
+          creationParamsCodec: const StandardMessageCodec(),
+          layoutDirection: TextDirection.ltr,
+        ),
+      );
+    } else {
+      return SizedBox(
+        height: height,
+        child: UiKitView(
+          viewType: "plugin/tap_card_sdk",
+          creationParams: widget.sdkConfiguration,
+          layoutDirection: TextDirection.ltr,
+          creationParamsCodec: const StandardMessageCodec(),
+        ),
+      );
+    }
   }
 }

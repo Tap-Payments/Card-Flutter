@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
                 },
                 "purpose": "PAYMENT_TRANSACTION",
                 "operator": {"publicKey": "pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7"},
-                "scope": "AuthenticatedToken",
+                "scope": "SaveToken",
                 "addons": {"loader": true},
                 "order": {
                   "description": "Authentication description",
@@ -144,6 +144,7 @@ class _MyAppState extends State<MyApp> {
               },
               generateToken: generateToken,
             ),
+            const SizedBox(height: 10),
             FilledButton(
               onPressed: () {
                 setState(() {

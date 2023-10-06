@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel;
 
 import java.util.ArrayList;
@@ -43,8 +44,19 @@ import android.os.Bundle;
 /**
  * CardFlutterPlugin
  */
-public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAware {
+public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAware, EventChannel.StreamHandler {
 
+    private EventChannel.EventSink eventSink;
+
+    @Override
+    public void onListen(Object arguments, EventChannel.EventSink events) {
+        this.eventSink = events;
+    }
+
+    @Override
+    public void onCancel(Object arguments) {
+        this.eventSink = null;
+    }
 
     /**
      * LifeCycleObserver
@@ -124,6 +136,8 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
      * class properties
      */
     private MethodChannel channel;
+
+    private EventChannel eventChannel;
     private TapCardSDKDelegate delegate;
     private FlutterPluginBinding pluginBinding;
     private ActivityPluginBinding activityBinding;
@@ -223,6 +237,9 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
         this.delegate = constructDelegate(activity);
         channel = new MethodChannel(messenger, "card_flutter");
         channel.setMethodCallHandler(this);
+        eventChannel = new EventChannel(messenger, "card_flutter_event");
+        eventChannel.setStreamHandler(this);
+
         observer = new LifeCycleObserver(activity);
         if (registrar != null) {
             // V1 embedding setup for activity listeners.
@@ -273,8 +290,11 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
         private MethodChannel.Result methodResult;
         private Handler handler;
 
+
+
         MethodResultWrapper(MethodChannel.Result result) {
             methodResult = result;
+
             handler = new Handler(Looper.getMainLooper());
         }
 
@@ -288,6 +308,7 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
                         @Override
                         public void run() {
                             methodResult.success(result);
+//                            methodResult.success(result);
                         }
                     });
         }
@@ -311,11 +332,14 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
 
     MethodChannel.Result result;
 
+
+
     @Override
     public void onMethodCall(MethodCall call, MethodChannel.Result rawResult) {
         HashMap<String, Object> args = call.arguments();
+
         System.out.println("args : " + args);
-        System.out.println("onMethodCall..... started");
+        System.out.println("onMethodCall..... started >>>>>>> " + call.method);
         if (activity == null) {
             rawResult.error("no_activity", "SDK plugin requires a foreground activity.", null);
             return;
@@ -330,15 +354,17 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
         boolean generateToken = false;
         if (call.method.equals("generateToken")) {
             generateToken = true;
-            delegate.start(activity, result, args, generateToken);
+            delegate.start(activity, result, args, generateToken, eventSink);
             //  delegate.generateTapToken(activity, result, args);
         }
 
         if (call.method.equals("start")) {
-            delegate.start(activity, result, args, generateToken);
+            delegate.start(activity, result, args, generateToken, eventSink);
 
         } else {
             delegate.pendingResult = result;
+            delegate.eventSink = eventSink;
+
         }
 
 

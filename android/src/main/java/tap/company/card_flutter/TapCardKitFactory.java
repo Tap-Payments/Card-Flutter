@@ -27,8 +27,6 @@ public class TapCardKitFactory extends PlatformViewFactory {
     public PlatformView create(@NonNull Context context, int id, @Nullable Object args) {
         final Map<String, Object> creationParams = (Map<String, Object>) args;
         System.out.println("Configuration from example app >>>>>>>>>>" + creationParams);
-
-
         return new TapCardKitViewManager(context, id, creationParams);
     }
 }
