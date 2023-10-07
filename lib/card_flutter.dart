@@ -9,7 +9,8 @@ class TapCardViewWidget extends StatefulWidget {
       onError,
       onValidInput,
       onBindIdentification,
-      onHeightChange;
+      onHeightChange,
+      onChangeSaveCard;
   final bool generateToken;
   final Map<String, dynamic> sdkConfiguration;
 
@@ -22,6 +23,7 @@ class TapCardViewWidget extends StatefulWidget {
     this.onBindIdentification,
     this.onHeightChange,
     this.onFocus,
+    this.onChangeSaveCard,
     required this.generateToken,
     required this.sdkConfiguration,
   });
@@ -36,6 +38,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   late Function(String?)? onSuccessFunction;
   late Function(String?)? onErrorFunction;
   late Function(String?)? onValidInputFunction;
+  late Function(String?)? onChangeSaveCardFunction;
   late Function(String?)? onBindIdentificationFunction;
   late Function(String?)? onHeightChangeFunction;
 
@@ -43,9 +46,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
 
   static const EventChannel _eventChannel = EventChannel('card_flutter_event');
 
-
   void streamTimeFromNative() {
-    print("streamTimeFromNative()");
     _eventChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
   }
 
@@ -55,17 +56,10 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
     if (event.toString() != null) {
       data = event.toString();
     }
-    // setState(() {
-    //   counter = data;
-    // });
-    print("_onEvent ${event.toString()}");
     handleCallbacks(event);
   }
 
-  void _onError(dynamic event) {
-    //Receive Event
-    print("_onError ${event.toString()}");
-  }
+  void _onError(dynamic event) {}
 
   @override
   void initState() {
@@ -82,7 +76,6 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
         'start',
         {"configuration": widget.sdkConfiguration},
       );
-      debugPrint("Result >>>>>>> $result");
       handleCallbacks(result);
       _startTapCardSDK2();
       // return responseData;
@@ -126,16 +119,11 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
 
   handleCallbacks(dynamic result) {
     if (result.containsKey("onHeightChange")) {
+      /// onHeightChange Callbacks Triggered From SDK
       var onHeightResponse = jsonDecode(result["onHeightChange"]);
-
-      debugPrint("On Height Response :::: $onHeightResponse");
-
       setState(() {
         height = double.parse(jsonDecode(result["onHeightChange"]).toString());
       });
-      // onBindIdentificationFunction = widget.onBindIdentification;
-      // onBindIdentificationFunction!(resultOfBindIdentification.toString());
-      /// onHeightChange Callbacks Triggered From SDK
     }
 
     if (result.containsKey("onBindIdentification")) {
@@ -176,6 +164,13 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
       var resultOfValidInput = jsonDecode(result["onValidInput"]);
       onValidInputFunction = widget.onValidInput;
       onValidInputFunction!(resultOfValidInput.toString());
+    }
+
+    if (result.containsKey("onChangeSaveCard")) {
+      /// onValidInput Callbacks Triggered From SDK
+      var resultOfOnChangeSaveCard = jsonDecode(result["onChangeSaveCard"]);
+      onChangeSaveCardFunction = widget.onChangeSaveCard;
+      onChangeSaveCardFunction!(resultOfOnChangeSaveCard.toString());
     }
   }
 

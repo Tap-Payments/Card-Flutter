@@ -251,4 +251,6 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                 });
 
     }
+
+
 }

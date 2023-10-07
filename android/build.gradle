@@ -60,5 +60,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.Tap-Payments:Tap-Card-SDK-Android:0.0.25'
+    implementation 'com.github.Tap-Payments:Card-Android:0.0.27'
+//    implementation 'com.github.Tap-Payments:Tap-Card-SDK-Android:0.0.25'
 }
