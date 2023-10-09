@@ -19,6 +19,8 @@ class _CardViewScreenState extends State<CardViewScreen> {
 
   bool generateToken = false;
 
+  bool showTapTokenButton = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +28,7 @@ class _CardViewScreenState extends State<CardViewScreen> {
         title: const Text('Plugin example app'),
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context,true);
+            Navigator.pop(context, true);
           },
           icon: const Icon(
             CupertinoIcons.back,
@@ -38,7 +40,11 @@ class _CardViewScreenState extends State<CardViewScreen> {
         children: [
           TapCardViewWidget(
             sdkConfiguration: widget.dictionaryMap,
-            onReady: () {},
+            onReady: () {
+              setState(() {
+                showTapTokenButton = true;
+              });
+            },
             onFocus: () {
               setState(() {
                 generateToken = false;
@@ -60,6 +66,8 @@ class _CardViewScreenState extends State<CardViewScreen> {
               });
             },
             onBindIdentification: (String? bindIdentification) {
+              debugPrint(
+                  "On BInd Identification Callback >>>>> $bindIdentification");
               setState(() {
                 mCardSDKResponse = bindIdentification.toString();
               });
@@ -77,36 +85,41 @@ class _CardViewScreenState extends State<CardViewScreen> {
             generateToken: generateToken,
           ),
           const SizedBox(height: 10),
-          FilledButton(
-            onPressed: () {
-              setState(() {
-                generateToken = true;
-              });
-            },
-            style: FilledButton.styleFrom(
-              fixedSize: Size(
-                MediaQuery.sizeOf(context).width * 0.96,
-                50,
+          Visibility(
+            visible: showTapTokenButton,
+            child: FilledButton(
+              onPressed: () {
+                setState(() {
+                  generateToken = true;
+                });
+              },
+              style: FilledButton.styleFrom(
+                fixedSize: Size(
+                  MediaQuery.sizeOf(context).width * 0.96,
+                  50,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              onHover: (bool? value) {},
+              child: const Text(
+                "Get Tap Token",
               ),
-            ),
-            onHover: (bool? value) {},
-            child: const Text(
-              "Get Tap Token",
             ),
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: Text(
-              mCardSDKResponse == null
-                  ? ""
-                  : "SDK RESPONSE : $mCardSDKResponse}",
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 12,
+            child: SingleChildScrollView(
+              child: Text(
+                mCardSDKResponse == null
+                    ? ""
+                    : "SDK RESPONSE : $mCardSDKResponse}",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                ),
               ),
             ),
           ),
