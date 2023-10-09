@@ -1,6 +1,6 @@
-# tap_card_sdk_flutter_example
+# card_flutter_example
 
-Demonstrates how to use the tap_card_sdk_flutter plugin.
+Demonstrates how to use the card_flutter plugin.
 
 ## Getting Started
 

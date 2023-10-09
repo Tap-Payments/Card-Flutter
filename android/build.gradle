@@ -1,4 +1,4 @@
-group 'tap.company.tap_card_sdk_flutter'
+group 'tap.company.card_flutter'
 version '1.0'
 
 buildscript {
@@ -29,7 +29,7 @@ apply plugin: 'com.android.library'
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace 'tap.company.tap_card_sdk_flutter'
+        namespace 'tap.company.card_flutter'
     }
 
     compileSdkVersion 33
@@ -60,6 +60,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.Tap-Payments:Tap-Card-SDK-Android:0.0.7'
+    implementation 'com.github.Tap-Payments:Card-Android:0.0.27'
+//    implementation 'com.github.Tap-Payments:Tap-Card-SDK-Android:0.0.25'
 }
-
