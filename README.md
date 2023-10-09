@@ -222,11 +222,9 @@ TapCardViewWidget(
               sdkConfiguration: const {
                 "features": {
                   "customerCards": {"saveCard": true, "autoSaveCard": true},
-                  "scanner": true,
+                  "alternativeCardInputs": {"cardScanner":true,"cardNFC":false},
                   "acceptanceBadge": true,
-                  "nfc": false
                 },
-                "redirect": {"url": ""},
                 "post": {"url": ""},
                 "customer": {
                   "id": "",
@@ -245,7 +243,7 @@ TapCardViewWidget(
                   },
                   "nameOnCard": "TAP PAYMENTS"
                 },
-                "fields": {
+                "fieldVisibility": {
                   "card": {"cardHolder": true, "cvv": true}
                 },
                 "merchant": {"id": ""},
@@ -255,26 +253,20 @@ TapCardViewWidget(
                   "theme": "light",
                   "locale": "en",
                   "edges": "curved",
-                  "cardDirection": "dynamic"
+                  "cardDirection": "dynamic",
+                  "loader": true
                 },
-                "purpose": "PAYMENT_TRANSACTION",
+                "purpose": "Transaction",
                 "operator": {"publicKey": "pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7"},
                 "scope": "SaveToken",
-                "addons": {"loader": true},
                 "order": {
                   "description": "Authentication description",
                   "currency": "KWD",
                   "amount": 1,
-                  "id": ""
-                },
-                "transaction": {
-                  "metadata": {"example": "value"},
-                  "reference": "tck_LVJL1I4XCwsgIYmilBINsAKYI",
-                  "paymentAgreement": {
-                    "id": "",
-                    "contract": {"id": ""}
-                  }
-                },
+                  "id": "",
+                  "reference":"",
+                  "metadata":{}
+                }
                 "invoice": {"id": ""},
                 "acceptance": {
                   "supportedPaymentAuthentications": ["3DS"],
