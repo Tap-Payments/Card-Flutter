@@ -41,11 +41,15 @@ class _CardViewScreenState extends State<CardViewScreen> {
           TapCardViewWidget(
             sdkConfiguration: widget.dictionaryMap,
             onReady: () {
+              debugPrint("onReady Callback >>>>>");
+
               setState(() {
                 showTapTokenButton = true;
               });
             },
             onFocus: () {
+              debugPrint("onFocus Callback >>>>>");
+
               setState(() {
                 generateToken = false;
               });
@@ -67,7 +71,7 @@ class _CardViewScreenState extends State<CardViewScreen> {
             },
             onBindIdentification: (String? bindIdentification) {
               debugPrint(
-                  "On BInd Identification Callback >>>>> $bindIdentification");
+                  "onBindIdentification Callback >>>>> $bindIdentification");
               setState(() {
                 mCardSDKResponse = bindIdentification.toString();
               });
