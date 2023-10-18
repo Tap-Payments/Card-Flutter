@@ -1006,3 +1006,233 @@ interface = {
 ```swift
 post = {"url":""}
 ```        
+# Expected Callbacks Responses[](https://developers.tap.company/docs/card-sdk-flutter#expected-callbacks-responses)
+
+## onBindIdentification
+```json
+{
+    "bin": "557607",
+    "bank": "COMMERCIAL INTERNATIONAL BANK (EGYPT) S.A.E.",
+    "card_brand": "MASTERCARD",
+    "card_type": "DEBIT",
+    "card_category": "PLATINUM",
+    "card_scheme": "MASTERCARD",
+    "country": "EG",
+    "address_required": false,
+    "api_version": "V2",
+    "issuer_id": "bnk_TS02A1320232208a5O41810531",
+    "brand": "MASTERCARD"
+}
+```
+
+## onSuccess
+The response here will differ based on the scope:
+### Token
+```json
+{
+    "id": "tok_4WUP3423199C4Vp18rY9y554",
+    "created": 1697656174554,
+    "object": "token",
+    "live_mode": false,
+    "type": "CARD",
+    "purpose": "Transaction",
+    "source": "CARD-ENCRYPTED",
+    "used": false,
+    "card": {
+        "id": "card_U8Wb34231992m7q185g9i558",
+        "object": "card",
+        "address": {},
+        "funding": "CREDIT",
+        "fingerprint": "gRkNTnMrJPtVYkFDVU485JtGPdhzQr%2FnmHGhlzLBvuc%3D",
+        "brand": "VISA",
+        "scheme": "VISA",
+        "category": "",
+        "exp_month": 2,
+        "exp_year": 44,
+        "last_four": "4242",
+        "first_six": "424242",
+        "first_eight": "42424242",
+        "name": "AHMED",
+        "issuer": {
+            "bank": "",
+            "country": "GB",
+            "id": "bnk_TS05A3420232209Kp2j1810445"
+        }
+    },
+    "save_card": false,
+    "url": ""
+}
+```
+
+
+## AuthenticatedToken
+```json
+{
+    "id": "auth_payer_MhIp23231913vYjl18nx94755",
+    "object": "Authenticate",
+    "live_mode": false,
+    "api_version": "V2",
+    "status": "AUTHENTICATED",
+    "created": "1697656409282",
+    "amount": 1,
+    "currency": "KWD",
+    "save_card": false,
+    "provider": {
+        "name": "MPGS"
+    },
+    "transaction": {
+        "timezone": "UTCZ",
+        "created": "1697656409282"
+    },
+    "response": {
+        "code": "000",
+        "message": "Authentication Successful"
+    },
+    "reference": {
+        "transaction": "tck_LV02G1720231634Xj51824647",
+        "order": "ord_Tlh924231913OouS18vd9O487"
+    },
+    "customer": {
+        "id": "",
+        "name": [
+            {
+                "first_name": "test",
+                "middle_name": "test",
+                "last_name": "test",
+                "locale": "en"
+            }
+        ],
+        "name_on_card": "Ahmed",
+        "email": "test@tap.com",
+        "phone": {
+            "country_code": "+20",
+            "number": "1099137777"
+        }
+    },
+    "source": {
+        "id": "tok_RCiU23231913dWqQ18WV9Q18"
+    },
+    "merchant": {
+        "id": "1124340"
+    },
+    "card": {
+        "first_six": "424242",
+        "scheme": "VISA",
+        "brand": "VISA",
+        "category": "",
+        "last_four": "4242",
+        "name": "AHMED",
+        "expiry": {
+            "month": "02",
+            "year": "44"
+        },
+        "funding": "CREDIT"
+    },
+    "authentication": {
+        "acsEci": "02",
+        "card_enrolled": "Y",
+        "authenticationToken": "jHyn+7YFi1EUAREAAAAvNUe6Hv8=",
+        "transactionId": "h3q0bQzZNyBueA//+57RcpfPo6s=",
+        "version": "3DS1",
+        "channel": "PAYER_BROWSER",
+        "purpose": "Transaction",
+        "url": "https://authenticate.alpha.tap.company/redirect/auth_payer_MhIp23231913vYjl18nx94755",
+        "transStatus": "Y",
+        "mode": "C"
+    },
+    "redirect": {
+        "url": ""
+    }
+}
+```
+
+## SaveAuthenticatedToken
+If the user didn't enable the save token switch, it will be as the previous scope. Otherwise it will be:
+```json
+{
+  "id": "auth_payer_yhFr59231914mJvN18c79665",
+  "object": "Authenticate",
+  "live_mode": false,
+  "api_version": "V2",
+  "status": "AUTHENTICATED",
+  "created": "1697656504329",
+  "amount": 1,
+  "currency": "KWD",
+  "save_card": true,
+  "provider": {
+    "name": "MPGS"
+  },
+  "transaction": {
+    "timezone": "UTCZ",
+    "created": "1697656504329"
+  },
+  "response": {
+    "code": "000",
+    "message": "Authentication Successful"
+  },
+  "reference": {
+    "transaction": "tck_LV02G1720231634Xj60014708",
+    "order": "ord_Zu5d59231914gJa018lJ9b720"
+  },
+  "customer": {
+    "id": "cus_TS01A1520232215Nx3n1810085",
+    "name": [
+      {
+        "first_name": "test",
+        "middle_name": "test",
+        "last_name": "test",
+        "locale": "en"
+      }
+    ],
+    "name_on_card": "Ahmed",
+    "email": "test@tap.com",
+    "phone": {
+      "country_code": "+20",
+      "number": "1099137777"
+    }
+  },
+  "source": {
+    "id": "tok_2AKI58231914GLWn18V69C147"
+  },
+  "merchant": {
+    "id": "1124340"
+  },
+  "card": {
+    "id": "card_rSWi582319149ys718hD9B151",
+    "first_six": "424242",
+    "scheme": "VISA",
+    "brand": "VISA",
+    "category": "",
+    "last_four": "4242",
+    "name": "AHMED",
+    "expiry": {
+      "month": "04",
+      "year": "44"
+    },
+    "funding": "CREDIT"
+  },
+  "authentication": {
+    "acsEci": "02",
+    "card_enrolled": "Y",
+    "authenticationToken": "jHyn+7YFi1EUAREAAAAvNUe6Hv8=",
+    "transactionId": "FOdR5lit6PaxiidyOxmjSS9z1ls=",
+    "version": "3DS1",
+    "channel": "PAYER_BROWSER",
+    "purpose": "Transaction",
+    "url": "https://authenticate.alpha.tap.company/redirect/auth_payer_yhFr59231914mJvN18c79665",
+    "transStatus": "Y",
+    "mode": "C"
+  },
+  "payment_agreement": {
+    "id": "payment_agreement_NDL3172319152Gck18109189",
+    "type": "UNSCHEDULED",
+    "contract": {
+      "id": "card_rSWi582319149ys718hD9B151",
+      "type": "SAVED_CARD"
+    }
+  },
+  "redirect": {
+    "url": ""
+  }
+}
+```
