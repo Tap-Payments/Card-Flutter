@@ -97,6 +97,7 @@ Each parameter is linked to the  [reference](https://developers.tap.company/docs
 | scope| Defines the intention of using Card-iOS. | True  | String| ` String scope = "Token"`|
 | purpose| Defines the intention of using the generated Token. | True  | String| `String purpose = "Transaction"` |
 | order| Order details linked to the token. | True  | `Map`| `order = {"id":"", "amount":1, "currency":"SAR", "description": "Authentication description", "reference":""}` |
+| customer|Customer details for tokenization process. | True  | `Map`| ` customer = {"id":"", "name":[{"lang":"en","first":"TAP","middle":"","last":"PAYMENTS"}], "nameOnCard":"TAP PAYMENTS", "editble":true, "contact":{"email":"tap@tap.company", "phone":{"countryCode":"+965","number":"88888888"}}}` |
 
 
 ### Configuring the Card-Flutter SDK[](https://developers.tap.company/docs/card-sdk-flutter#configuring-the-card-flutter-sdk)
