@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:card_flutter_example/src/card_view_screen.dart';
 import 'package:card_flutter_example/src/models/multi_selection_model.dart';
 import 'package:card_flutter_example/src/multi_values_selection_screen.dart';
@@ -688,7 +690,9 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                           },
                           "purpose": selectedPurposeValue,
                           "operator": {
-                            "publicKey": publicKeyController.text,
+                            "publicKey": Platform.isAndroid
+                                ? publicKeyController.text
+                                : publicKeyController.text,
                           },
                           "scope": selectedScopeValue,
                           "order": {
