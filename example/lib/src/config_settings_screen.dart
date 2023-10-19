@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:card_flutter_example/src/card_view_screen.dart';
 import 'package:card_flutter_example/src/models/multi_selection_model.dart';
 import 'package:card_flutter_example/src/multi_values_selection_screen.dart';
@@ -28,7 +26,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
   bool cardHolder = true;
   bool cvv = true;
   bool loader = true;
-  bool powered = true;
 
   /// Text Form Fields
   /// Variable Declaration
@@ -621,16 +618,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
               },
             ),
             const CustomDividerWidget(),
-            SwitchListTileWidget(
-              title: "powered",
-              value: powered,
-              onChange: (value) {
-                setState(() {
-                  powered = value!;
-                });
-              },
-            ),
-            const CustomDividerWidget(),
             SingleValueSelectionWidget(
               keyName: 'colorStyle',
               selectedValueName: selectedColorStyleValue,
@@ -692,7 +679,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                           },
                           "merchant": {"id": merchantIdController.text},
                           "interface": {
-                            "powered": powered,
                             "colorStyle": selectedColorStyleValue,
                             "theme": selectedThemeValue,
                             "locale": selectedLocaleValue,

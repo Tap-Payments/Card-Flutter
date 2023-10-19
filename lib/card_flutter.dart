@@ -13,6 +13,7 @@ class TapCardViewWidget extends StatefulWidget {
       onChangeSaveCard;
   final bool generateToken;
   final Map<String, dynamic> sdkConfiguration;
+  final String? cardNumber, cardExpiry;
 
   const TapCardViewWidget({
     super.key,
@@ -24,6 +25,8 @@ class TapCardViewWidget extends StatefulWidget {
     this.onHeightChange,
     this.onFocus,
     this.onChangeSaveCard,
+    this.cardNumber,
+    this.cardExpiry,
     required this.generateToken,
     required this.sdkConfiguration,
   });
@@ -74,7 +77,11 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
     try {
       dynamic result = await _channel.invokeMethod(
         'start',
-        {"configuration": widget.sdkConfiguration},
+        {
+          "configuration": widget.sdkConfiguration,
+          "cardNumber": widget.cardNumber,
+          "cardExpiry": widget.cardExpiry,
+        },
       );
       handleCallbacks(result);
       _startTapCardSDK2();
@@ -90,6 +97,8 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
         'start2',
         {
           "configuration": widget.sdkConfiguration,
+          "cardNumber": widget.cardNumber,
+          "cardExpiry": widget.cardExpiry,
         },
       );
 
@@ -107,6 +116,8 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
         'generateToken',
         {
           "configuration": widget.sdkConfiguration,
+          "cardNumber": widget.cardNumber,
+          "cardExpiry": widget.cardExpiry,
         },
       );
 

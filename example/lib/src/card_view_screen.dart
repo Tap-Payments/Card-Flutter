@@ -40,6 +40,8 @@ class _CardViewScreenState extends State<CardViewScreen> {
         children: [
           TapCardViewWidget(
             sdkConfiguration: widget.dictionaryMap,
+            cardNumber: "",
+            cardExpiry: "",
             onReady: () {
               debugPrint("onReady Callback >>>>>");
 
@@ -91,24 +93,27 @@ class _CardViewScreenState extends State<CardViewScreen> {
           const SizedBox(height: 10),
           Visibility(
             visible: showTapTokenButton,
-            child: FilledButton(
-              onPressed: () {
-                setState(() {
-                  generateToken = true;
-                });
-              },
-              style: FilledButton.styleFrom(
-                fixedSize: Size(
-                  MediaQuery.sizeOf(context).width * 0.96,
-                  50,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: FilledButton(
+                onPressed: () {
+                  setState(() {
+                    generateToken = true;
+                  });
+                },
+                style: FilledButton.styleFrom(
+                  fixedSize: Size(
+                    MediaQuery.sizeOf(context).width * 0.96,
+                    50,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                onHover: (bool? value) {},
+                child: const Text(
+                  "Get Tap Token",
                 ),
-              ),
-              onHover: (bool? value) {},
-              child: const Text(
-                "Get Tap Token",
               ),
             ),
           ),

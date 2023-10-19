@@ -1,5 +1,5 @@
 PODS:
-  - Card-iOS (0.0.22):
+  - Card-iOS (0.0.26):
     - SharedDataModels-iOS
     - SnapKit
     - SwiftEntryKit
@@ -7,7 +7,7 @@ PODS:
     - TapCardScannerWebWrapper-iOS
     - TapFontKit-iOS
   - card_flutter (1.0.0):
-    - Card-iOS (= 0.0.22)
+    - Card-iOS (= 0.0.26)
     - Flutter
   - Flutter (1.0.0)
   - integration_test (0.0.1):
@@ -58,8 +58,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/integration_test/ios"
 
 SPEC CHECKSUMS:
-  Card-iOS: 9f07b952a07d6a9078612d0b223f1103f93d753e
-  card_flutter: 88949690876cd8b3202c1df42483b0afbfedc38e
+  Card-iOS: f59856f176ff4d9c75af33215067d04c4d194bda
+  card_flutter: cb6dfceb01a27c00c1a5e35ce1e95040696127ce
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   integration_test: 13825b8a9334a850581300559b8839134b124670
   SharedDataModels-iOS: 03d22b8a256a6ce698180b24d3ff8fefe42707b1
