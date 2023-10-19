@@ -63,6 +63,8 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
 
 
             HashMap<String, Object> tapCardConfigurations = (HashMap<String, Object>) params.get("configuration");
+            String cardNumber = (String) params.get("cardNumber");
+            String cardExpiry = (String) params.get("cardExpiry");
 
             System.out.println("Tap Card Configurations " + tapCardConfigurations);
 
@@ -71,7 +73,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                 DataConfiguration.INSTANCE.generateToken(tapCardKit);
             } else {
                 assert tapCardConfigurations != null;
-                DataConfiguration.INSTANCE.initializeSDK(activity1, tapCardConfigurations, tapCardKit);
+                DataConfiguration.INSTANCE.initializeSDK(activity1, tapCardConfigurations, tapCardKit, cardNumber,cardExpiry);
                 DataConfiguration.INSTANCE.addTapCardStatusDelegate(this);
             }
 

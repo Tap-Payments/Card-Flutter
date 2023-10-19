@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:card_flutter_example/src/card_view_screen.dart';
 import 'package:card_flutter_example/src/models/multi_selection_model.dart';
 import 'package:card_flutter_example/src/multi_values_selection_screen.dart';
@@ -22,12 +20,12 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
   bool editable = true;
   bool acceptanceBadge = true;
   bool scanner = true;
+  bool nfc = false;
   bool saveCard = true;
   bool autoSaveCard = true;
   bool cardHolder = true;
   bool cvv = true;
   bool loader = true;
-  bool powered = true;
 
   /// Text Form Fields
   /// Variable Declaration
@@ -35,7 +33,7 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
     text: "pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7",
   );
   TextEditingController transactionReferenceController = TextEditingController(
-    text: "tck_LVJL",
+    text: "",
   );
   TextEditingController transactionIdController = TextEditingController();
   TextEditingController transactionContractIdController =
@@ -72,13 +70,17 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
   /// List of purpose for the user selection
   /// List & Variable Declaration
 
-  String selectedPurposeValue = "PAYMENT_TRANSACTION";
+  String selectedPurposeValue = "Transaction";
   List<String> purposeList = [
-    "PAYMENT_TRANSACTION",
-    "RECURRING_TRANSACTION",
-    "INSTALLMENT_TRANSACTION",
-    "ADD_CARD",
-    "CARDHOLDER_VERIFICATION"
+    "Transaction",
+    "Save Card",
+    "Verify Cardholder",
+    "Order Transaction",
+    "Subscription Transaction",
+    "Billing Transaction",
+    "Installment Transaction",
+    "Milestone Transaction",
+    "Maintain Card"
   ];
 
   /// Locale
@@ -264,24 +266,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
     );
   }
 
-  /// Generating Random String For Transaction Reference
-
-  final String _chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  final Random _rnd = Random();
-  String randomTransactionReference = "";
-
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-
-  @override
-  void initState() {
-    randomTransactionReference = getRandomString(21);
-    transactionReferenceController.text =
-        transactionReferenceController.text + randomTransactionReference;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -299,7 +283,7 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
             const LabelTextWidget(label: "Operator"),
             gapH4,
             CustomInputFieldWidget(
-              fieldName: 'Tap Public Key',
+              fieldName: 'Public Key',
               controller: publicKeyController,
             ),
             gapH24,
@@ -331,13 +315,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
               },
             ),
             gapH24,
-            const LabelTextWidget(label: "Transaction"),
-            gapH4,
-            CustomInputFieldWidget(
-              fieldName: 'Transaction Reference',
-              controller: transactionReferenceController,
-            ),
-            gapH24,
             const LabelTextWidget(label: "Transaction.PaymentAgreement"),
             gapH4,
             CustomInputFieldWidget(
@@ -355,9 +332,14 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
             const LabelTextWidget(label: "Order"),
             gapH4,
             CustomInputFieldWidget(
-              fieldName: 'Tap order id',
+              fieldName: 'order id',
               controller: orderIdController,
-              hintText: "Enter your tap order id",
+              hintText: "Enter your order id",
+            ),
+            const CustomDividerWidget(),
+            CustomInputFieldWidget(
+              fieldName: 'reference',
+              controller: transactionReferenceController,
             ),
             const CustomDividerWidget(),
             CustomInputFieldWidget(
@@ -386,9 +368,9 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
             const LabelTextWidget(label: "Merchant"),
             gapH4,
             CustomInputFieldWidget(
-              fieldName: 'Tap merchant id',
+              fieldName: 'merchant id',
               controller: merchantIdController,
-              hintText: "Enter your tap merchant id",
+              hintText: "Enter your merchant id",
             ),
             gapH24,
             const LabelTextWidget(label: "Customer"),
@@ -426,7 +408,7 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
             ),
             const CustomDividerWidget(),
             SwitchListTileWidget(
-              title: "scanner",
+              title: "cardScanner",
               onChange: (value) {
                 setState(() {
                   scanner = value!;
@@ -434,9 +416,19 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
               },
               value: scanner,
             ),
-            gapH24,
-            const LabelTextWidget(label: "Features.CustomerCards"),
-            gapH4,
+            const CustomDividerWidget(),
+            if (Theme.of(context).platform == TargetPlatform.android)
+              SwitchListTileWidget(
+                title: "cardNFC",
+                onChange: (value) {
+                  setState(() {
+                    nfc = value!;
+                  });
+                },
+                value: nfc,
+              ),
+            if (Theme.of(context).platform == TargetPlatform.android)
+              const CustomDividerWidget(),
             SwitchListTileWidget(
               title: "customerCards.saveCard",
               onChange: (value) {
@@ -543,7 +535,7 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
               },
             ),
             gapH24,
-            const LabelTextWidget(label: "Fields.Card*"),
+            const LabelTextWidget(label: "FieldVisibility.Card*"),
             gapH4,
             SwitchListTileWidget(
               title: "Card holder",
@@ -561,18 +553,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
               onChange: (value) {
                 setState(() {
                   cvv = value!;
-                });
-              },
-            ),
-            gapH24,
-            const LabelTextWidget(label: "Addons"),
-            gapH4,
-            SwitchListTileWidget(
-              title: "loader",
-              value: loader,
-              onChange: (value) {
-                setState(() {
-                  loader = value!;
                 });
               },
             ),
@@ -629,11 +609,11 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
             ),
             const CustomDividerWidget(),
             SwitchListTileWidget(
-              title: "powered",
-              value: powered,
+              title: "loader",
+              value: loader,
               onChange: (value) {
                 setState(() {
-                  powered = value!;
+                  loader = value!;
                 });
               },
             ),
@@ -653,8 +633,8 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: FilledButton(
-                onPressed: () async {
-                  var result = await Navigator.push(
+                onPressed: () {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CardViewScreen(
@@ -664,12 +644,13 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                               "saveCard": saveCard,
                               "autoSaveCard": autoSaveCard
                             },
-                            "scanner": scanner,
+                            "alternativeCardInputs": {
+                              "cardScanner": scanner,
+                              "cardNFC": nfc,
+                            },
                             "acceptanceBadge": acceptanceBadge,
-                            "nfc": false
                           },
-                          "redirect": {"url": ""},
-                          "post": {"url": ""},
+                          "post": const {"url": ""},
                           "customer": {
                             "id": customerIdController.text,
                             "name": const [
@@ -688,9 +669,9 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                                 "number": "88888888"
                               }
                             },
-                            "nameOnCard": nameOnCardController.text
+                            "nameOnCard": nameOnCardController.text,
                           },
-                          "fields": {
+                          "fieldVisibility": {
                             "card": {
                               "cardHolder": cardHolder,
                               "cvv": cvv,
@@ -698,50 +679,37 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                           },
                           "merchant": {"id": merchantIdController.text},
                           "interface": {
-                            "powered": powered,
                             "colorStyle": selectedColorStyleValue,
                             "theme": selectedThemeValue,
                             "locale": selectedLocaleValue,
                             "edges": selectedEdgesValue,
-                            "cardDirection": selectedCardDirectionValue
+                            "cardDirection": selectedCardDirectionValue,
+                            "loader": loader
                           },
                           "purpose": selectedPurposeValue,
-                          "operator": {"publicKey": publicKeyController.text},
+                          "operator": {
+                            "publicKey": publicKeyController.text,
+                          },
                           "scope": selectedScopeValue,
-                          "addons": {"loader": loader},
                           "order": {
                             "description": orderDescriptionController.text,
                             "currency": orderCurrencyController.text,
                             "amount": orderAmountController.text,
                             "id": orderIdController.text,
-                          },
-                          "transaction": {
-                            "metadata": const {"example": "value"},
                             "reference": transactionReferenceController.text,
-                            "paymentAgreement": {
-                              "id": transactionIdController.text,
-                              "contract": {
-                                "id": transactionContractIdController.text,
-                              }
-                            }
+                            "metadata": const {"a": "abc"}
                           },
                           "invoice": {"id": linkToAnInvoiceController.text},
                           "acceptance": {
                             "supportedPaymentAuthentications":
                                 selectedPaymentAuthentications,
                             "supportedFundSource": selectedSupportedFundSources,
-                            "supportedSchemes": selectedSupportedSchemes
+                            "supportedSchemes": selectedSupportedSchemes,
                           }
                         },
                       ),
                     ),
                   );
-
-                  randomTransactionReference = getRandomString(21);
-                  transactionReferenceController.text =
-                      transactionReferenceController.text +
-                          randomTransactionReference;
-                  setState(() {});
                 },
                 child: const Text("Next"),
               ),
