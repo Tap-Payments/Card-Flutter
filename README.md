@@ -40,7 +40,7 @@ In the  `pubspec.yaml`  of your flutter project, add the following dependency:
 
 dependencies:
 
-```card_flutter: 1.0.1```
+```card_flutter: 1.0.2```
 
 In your library add the following import:
 
@@ -124,9 +124,9 @@ While creating the widget as previously mentioned, it is time to pass the parame
           "contact": {
             "email": "tap@tap.company",
             "phone": {"countryCode": "+965", "number": "88888888"},
-          ],
-        ],
-      ]
+          },
+        },
+      }
 ```
 
 2. Pass these parameters to the TapCardViewWidget widget

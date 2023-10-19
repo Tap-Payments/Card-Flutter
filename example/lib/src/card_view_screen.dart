@@ -40,8 +40,6 @@ class _CardViewScreenState extends State<CardViewScreen> {
         children: [
           TapCardViewWidget(
             sdkConfiguration: widget.dictionaryMap,
-            cardNumber: "",
-            cardExpiry: "",
             onReady: () {
               debugPrint("onReady Callback >>>>>");
 

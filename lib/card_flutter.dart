@@ -79,8 +79,8 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
         'start',
         {
           "configuration": widget.sdkConfiguration,
-          "cardNumber": widget.cardNumber,
-          "cardExpiry": widget.cardExpiry,
+          "cardNumber": widget.cardNumber ?? "",
+          "cardExpiry": widget.cardExpiry ?? "",
         },
       );
       handleCallbacks(result);
@@ -97,8 +97,8 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
         'start2',
         {
           "configuration": widget.sdkConfiguration,
-          "cardNumber": widget.cardNumber,
-          "cardExpiry": widget.cardExpiry,
+          "cardNumber": widget.cardNumber ?? "",
+          "cardExpiry": widget.cardExpiry ?? "",
         },
       );
 
@@ -116,8 +116,8 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
         'generateToken',
         {
           "configuration": widget.sdkConfiguration,
-          "cardNumber": widget.cardNumber,
-          "cardExpiry": widget.cardExpiry,
+          "cardNumber": widget.cardNumber ?? "",
+          "cardExpiry": widget.cardExpiry ?? "",
         },
       );
 
