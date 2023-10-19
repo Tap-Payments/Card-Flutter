@@ -94,7 +94,7 @@ Each parameter is linked to the  [reference](https://developers.tap.company/docs
 |Parameter|Description | Required | Type| Sample
 |--|--|--| --|--|
 | operator| Key obtained after registering your package name, also known as Public key. | True  | Map| `{"operator": {"publicKey": "pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7"}` |
-| scope| Defines the intention of using Card-iOS. | True  | String| ` String scope = "Token"`|
+| scope| Defines the intention of using Card-Flutter. | True  | String| ` String scope = "Token"`|
 | purpose| Defines the intention of using the generated Token. | True  | String| `String purpose = "Transaction"` |
 | order| Order details linked to the token. | True  | `Map`| `order = {"id":"", "amount":1, "currency":"SAR", "description": "Authentication description", "reference":""}` |
 | customer|Customer details for tokenization process. | True  | `Map`| ` customer = {"id":"", "name":[{"lang":"en","first":"TAP","middle":"","last":"PAYMENTS"}], "nameOnCard":"TAP PAYMENTS", "editble":true, "contact":{"email":"tap@tap.company", "phone":{"countryCode":"+965","number":"88888888"}}}` |
@@ -102,7 +102,7 @@ Each parameter is linked to the  [reference](https://developers.tap.company/docs
 
 ### Configuring the Card-Flutter SDK[](https://developers.tap.company/docs/card-sdk-flutter#configuring-the-card-flutter-sdk)
 
-While creating the UI using any of the previously mentioned ways, it is time to pass the parameters needed for the SDK to work as expected and serve your need correctly.
+While creating the widget as previously mentioned, it is time to pass the parameters needed for the SDK to work as expected and serve your need correctly.
 
 1.  **Creating the parameters**  
     To allow flexibility and to ease the integration, your application will only has to pass the parameters as a  `Dictionary[String:Any]` .  
@@ -129,7 +129,7 @@ While creating the UI using any of the previously mentioned ways, it is time to 
       ]
 ```
 
-2. Pass these parameters to the created Card Form variable before as follows
+2. Pass these parameters to the TapCardViewWidget widget
 ```dart
 // We provide the card view the needed parameters.
 TapCardViewWidget(
@@ -373,7 +373,7 @@ You can use a Dictionary  to send data to our SDK. The benefit is that you can g
 
 ###  Receiving Callback Notifications (Advanced Version)[](https://developers.tap.company/docs/card-sdk-ios#receiving-callback-notifications-advanced-version)
 
-The below will allow the integrators to get notified from events fired from the TapCardView.
+The below will allow the integrators to get notified from events fired from the TapCardViewWidget.
 
 ```Dart
   TapCardViewWidget(
@@ -445,7 +445,10 @@ The Card-Flutter SDK provides a stateful variable, that allows you to instruct i
 >     Tokens are useful for recurring payments, as they allow you to charge a customer's card without storing their actual card details.
 > -   **Convenience**  
 >     Tokens simplify payment processing, as you only need to deal with tokens instead of card numbers.
-
+1.  Declare a boolean variable in your stateful widget
+2.  This variable will be passed to the TapCardViewWidget while initialisation as below.
+3.  Whenever you need, change it to true to trigger the tokenization status in the TapcardViewWidget.
+    
 ```dart
 /// In this example, we will assume that you want to generate the token, once the user fills in correct and valid card data
 TapCardViewWidget(
