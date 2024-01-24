@@ -72,17 +72,11 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
   /// List of purpose for the user selection
   /// List & Variable Declaration
 
-  String selectedPurposeValue = "Transaction";
+  String selectedPurposeValue = "Charge";
   List<String> purposeList = [
-    "Transaction",
-    "Save Card",
-    "Verify Cardholder",
-    "Order Transaction",
-    "Subscription Transaction",
-    "Billing Transaction",
-    "Installment Transaction",
-    "Milestone Transaction",
-    "Maintain Card"
+    "Charge",
+    "Authorize",
+    "Save Token",
   ];
 
   /// Locale

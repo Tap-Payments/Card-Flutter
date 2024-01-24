@@ -1,14 +1,20 @@
+## 1.0.4 24-Jan-2024
+
+* Android SDK updated.
+* Update to latest android card sdk version with handling of ssl
+* iOS SDK updated
+
 ## 1.0.3
 
-* Android SDK is updated.
+* Android SDK updated.
 
 ## 1.0.2
 
-* bug fixes for Android SDK.
+* Bug fixes for Android SDK.
 
 ## 1.0.1
 
-* updated iOS SDK.
+* iOS SDK updated.
 
 ## 1.0.0
 

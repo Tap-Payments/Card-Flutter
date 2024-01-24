@@ -56,10 +56,8 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   void _onEvent(dynamic event) {
     //Receive Event
     var data = "Start Listing..";
-    if (event.toString() != null) {
-      data = event.toString();
-    }
-    handleCallbacks(event);
+    data = event.toString();
+    handleCallbacks(data);
   }
 
   void _onError(dynamic event) {}
@@ -131,7 +129,6 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   handleCallbacks(dynamic result) {
     if (result.containsKey("onHeightChange")) {
       /// onHeightChange Callbacks Triggered From SDK
-      var onHeightResponse = jsonDecode(result["onHeightChange"]);
       setState(() {
         height = double.parse(jsonDecode(result["onHeightChange"]).toString());
         height = height + 10;

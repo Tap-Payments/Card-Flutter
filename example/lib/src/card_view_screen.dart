@@ -121,7 +121,7 @@ class _CardViewScreenState extends State<CardViewScreen> {
               child: Text(
                 mCardSDKResponse == null
                     ? ""
-                    : "SDK RESPONSE : $mCardSDKResponse}",
+                    : "SDK RESPONSE : $mCardSDKResponse",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.black,
