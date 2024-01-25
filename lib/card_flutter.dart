@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -45,6 +44,8 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   late Function(String?)? onBindIdentificationFunction;
   late Function(String?)? onHeightChangeFunction;
 
+  bool tokenAlreadyInProgress = false;
+
   static const MethodChannel _channel = MethodChannel('card_flutter');
 
   static const EventChannel _eventChannel = EventChannel('card_flutter_event');
@@ -56,8 +57,10 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   void _onEvent(dynamic event) {
     //Receive Event
     var data = "Start Listing..";
-    data = event.toString();
-    handleCallbacks(data);
+    if (event.toString() != null) {
+      data = event.toString();
+    }
+    handleCallbacks(event);
   }
 
   void _onError(dynamic event) {}
@@ -127,10 +130,10 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   }
 
   handleCallbacks(dynamic result) {
+    debugPrint("Result Data Type : ${result.runtimeType}");
     if (result.containsKey("onHeightChange")) {
-      /// onHeightChange Callbacks Triggered From SDK
       setState(() {
-        height = double.parse(jsonDecode(result["onHeightChange"]).toString());
+        height = double.parse(result["onHeightChange"].toString());
         height = height + 10;
       });
     }
@@ -138,17 +141,16 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
     if (result.containsKey("onBindIdentification")) {
       /// onBindIdentification Callbacks Triggered From SDK
       var resultOfBindIdentification =
-          jsonDecode(result["onBindIdentification"]);
+          result["onBindIdentification"].toString();
+
       onBindIdentificationFunction = widget.onBindIdentification;
       onBindIdentificationFunction!(resultOfBindIdentification.toString());
     }
 
     if (result.containsKey("onError")) {
       /// onError Callbacks Triggered From SDK
-      // var resultOfError = jsonDecode(result["onError"]);
-      debugPrint("On Error Callback Fired>>>>> ${result["onError"]} ");
       onErrorFunction = widget.onError;
-      onErrorFunction!(result["onError"]);
+      onErrorFunction!(result["onError"].toString());
     }
 
     if (result.containsKey("onFocus")) {
@@ -167,21 +169,21 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
 
     if (result.containsKey("onSuccess")) {
       /// onSuccess Callbacks Triggered From SDK
-      var resultOfSuccess = jsonDecode(result["onSuccess"]);
+      var resultOfSuccess = result["onSuccess"].toString();
       onSuccessFunction = widget.onSuccess;
       onSuccessFunction!(resultOfSuccess.toString());
     }
 
     if (result.containsKey("onValidInput")) {
       /// onValidInput Callbacks Triggered From SDK
-      var resultOfValidInput = jsonDecode(result["onValidInput"]);
+      var resultOfValidInput = result["onValidInput"].toString();
       onValidInputFunction = widget.onValidInput;
       onValidInputFunction!(resultOfValidInput.toString());
     }
 
     if (result.containsKey("onChangeSaveCard")) {
       /// onValidInput Callbacks Triggered From SDK
-      var resultOfOnChangeSaveCard = jsonDecode(result["onChangeSaveCard"]);
+      var resultOfOnChangeSaveCard = result["onChangeSaveCard"].toString();
       onChangeSaveCardFunction = widget.onChangeSaveCard;
       onChangeSaveCardFunction!(resultOfOnChangeSaveCard.toString());
     }
@@ -192,7 +194,12 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.generateToken) {
-      generateTapToken();
+      if (tokenAlreadyInProgress == false) {
+        generateTapToken();
+        tokenAlreadyInProgress = true;
+      }
+    } else {
+      tokenAlreadyInProgress = false;
     }
 
     if (Theme.of(context).platform == TargetPlatform.android) {

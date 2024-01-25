@@ -57,11 +57,13 @@ class _CardViewScreenState extends State<CardViewScreen> {
             onSuccess: (String? success) {
               setState(() {
                 mCardSDKResponse = success.toString();
+                generateToken = false;
               });
             },
             onValidInput: (String? validInput) {
               setState(() {
                 mCardSDKResponse = validInput.toString();
+                generateToken = false;
               });
             },
             onHeightChange: (String? heightChange) {
@@ -84,6 +86,7 @@ class _CardViewScreenState extends State<CardViewScreen> {
             onError: (String? error) {
               setState(() {
                 mCardSDKResponse = error.toString();
+                generateToken = false;
               });
             },
             generateToken: generateToken,
@@ -117,15 +120,18 @@ class _CardViewScreenState extends State<CardViewScreen> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: SingleChildScrollView(
-              child: Text(
-                mCardSDKResponse == null
-                    ? ""
-                    : "SDK RESPONSE : $mCardSDKResponse",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 12,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Text(
+                  mCardSDKResponse == null
+                      ? ""
+                      : "SDK RESPONSE : $mCardSDKResponse",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ),
