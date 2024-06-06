@@ -2,6 +2,8 @@ import 'package:card_flutter/card_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'config_settings_screen.dart';
+
 class CardViewScreen extends StatefulWidget {
   final Map<String, dynamic> dictionaryMap;
 
@@ -22,13 +24,30 @@ class _CardViewScreenState extends State<CardViewScreen> {
   bool showTapTokenButton = false;
 
   @override
+  void initState() {
+    showTapTokenButton = false;
+    debugPrint("SHOW TAP TOKEN BUTTON >>> $showTapTokenButton");
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Plugin example app'),
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context, true);
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ConfigSettingsScreen(),
+                ),
+                (route) => false);
           },
           icon: const Icon(
             CupertinoIcons.back,
@@ -90,6 +109,8 @@ class _CardViewScreenState extends State<CardViewScreen> {
               });
             },
             generateToken: generateToken,
+            cardNumber: "5123450000000008",
+            cardExpiry: "01/39",
           ),
           const SizedBox(height: 10),
           Visibility(

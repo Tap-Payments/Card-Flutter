@@ -55,7 +55,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
     }
 
 
-    public void start(Activity activity1, MethodChannel.Result callback, HashMap<String, Object> params, boolean generateToken,EventChannel.EventSink event ) {
+    public void start(Activity activity1, MethodChannel.Result callback, HashMap<String, Object> params, boolean generateToken, EventChannel.EventSink event) {
         this.pendingResult = callback;
         this.eventSink = event;
         this.activity = activity1;
@@ -73,8 +73,9 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                 DataConfiguration.INSTANCE.generateToken(tapCardKit);
             } else {
                 assert tapCardConfigurations != null;
-                DataConfiguration.INSTANCE.initializeSDK(activity1, tapCardConfigurations, tapCardKit, cardNumber,cardExpiry);
-                DataConfiguration.INSTANCE.addTapCardStatusDelegate(this);
+                DataConfiguration.INSTANCE.initializeSDK(activity1, tapCardConfigurations, this, tapCardKit, cardNumber, cardExpiry);
+                //  DataConfiguration.INSTANCE.addTapCardStatusDelegate(this);
+
             }
 
         } catch (Exception e) {
@@ -143,15 +144,15 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                 new Runnable() {
                     @Override
                     public void run() {
-                        try{
+                        try {
                             HashMap<String, Object> resultData = new HashMap<>();
                             resultData.put("onHeightChange", s);
                             System.out.println("On Height " + new Timestamp(System.currentTimeMillis()));
                             eventSink.success(resultData);
 
-                        }catch (IllegalStateException exception) {
+                        } catch (IllegalStateException exception) {
                             // Output expected IllegalStateException.
-                            System.out.println("Exception " +exception);
+                            System.out.println("Exception " + exception);
                             // Logging.log(exception);
                         } catch (Throwable throwable) {
                             // Output unexpected Throwables.
@@ -163,28 +164,28 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                 });
 
 
-
     }
 
 
     @Override
     public void onReady() {
 
-
+        System.out.println("ON READY CALLED  " + onReadyCallbackTriggered);
+        onReadyCallbackTriggered = false;
         if (!onReadyCallbackTriggered) {
             handler.post(
                     new Runnable() {
                         @Override
                         public void run() {
 
-                            try{
+                            try {
                                 HashMap<String, Object> resultData = new HashMap<>();
                                 resultData.put("onReady", "On Ready Callback Is Executed");
                                 eventSink.success(resultData);
 
-                            }catch (IllegalStateException exception) {
+                            } catch (IllegalStateException exception) {
                                 // Output expected IllegalStateException.
-                                System.out.println("Exception " +exception);
+                                System.out.println("Exception " + exception);
                                 // Logging.log(exception);
                             } catch (Throwable throwable) {
                                 // Output unexpected Throwables.
@@ -196,6 +197,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                     });
             onReadyCallbackTriggered = true;
         } else {
+            System.out.println("ON READY NEVER FIRED ");
             new java.util.Timer().schedule(
                     new java.util.TimerTask() {
                         @Override
@@ -233,14 +235,14 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                     @Override
                     public void run() {
 
-                        try{
+                        try {
                             HashMap<String, Object> resultData = new HashMap<>();
                             resultData.put("onValidInput", s);
                             eventSink.success(resultData);
 
-                        }catch (IllegalStateException exception) {
+                        } catch (IllegalStateException exception) {
                             // Output expected IllegalStateException.
-                            System.out.println("Exception " +exception);
+                            System.out.println("Exception " + exception);
                             // Logging.log(exception);
                         } catch (Throwable throwable) {
                             // Output unexpected Throwables.

@@ -64,8 +64,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
   List<String> scopeList = [
     "Token",
     "AuthenticatedToken",
-    "SaveToken",
-    "SaveAuthenticatedToken",
   ];
 
   /// Purpose
@@ -89,13 +87,13 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
   /// List of theme for the user selection
   /// List & Variable Declaration
   String selectedThemeValue = "light";
-  List<String> themeList = ["light", "dark"];
+  List<String> themeList = ["light", "dark", "dynamic"];
 
   /// Edges
   /// List of edges for the user selection
   /// List & Variable Declaration
   String selectedEdgesValue = "curved";
-  List<String> edgesList = ["curved", "flat"];
+  List<String> edgesList = ["curved", "flat", "circular"];
 
   /// Card Direction
   /// List of card direction for the user selection
@@ -326,13 +324,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
             ),
             gapH24,
             const LabelTextWidget(label: "Order"),
-            gapH4,
-            CustomInputFieldWidget(
-              fieldName: 'order id',
-              controller: orderIdController,
-              hintText: "Enter your order id",
-            ),
-            const CustomDividerWidget(),
             CustomInputFieldWidget(
               fieldName: 'reference',
               controller: transactionReferenceController,
@@ -351,22 +342,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
             CustomInputFieldWidget(
               fieldName: 'order description',
               controller: orderDescriptionController,
-            ),
-            gapH24,
-            const LabelTextWidget(label: "Invoice"),
-            gapH4,
-            CustomInputFieldWidget(
-              fieldName: 'Link to an invoice',
-              controller: linkToAnInvoiceController,
-              hintText: "Enter your invoice id",
-            ),
-            gapH24,
-            const LabelTextWidget(label: "Merchant"),
-            gapH4,
-            CustomInputFieldWidget(
-              fieldName: 'merchant id',
-              controller: merchantIdController,
-              hintText: "Enter your merchant id",
             ),
             gapH24,
             const LabelTextWidget(label: "Customer"),

@@ -130,7 +130,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   }
 
   handleCallbacks(dynamic result) {
-    debugPrint("Result Data Type : ${result.runtimeType}");
+    debugPrint("Result Data Type : ${result}");
     if (result.containsKey("onHeightChange")) {
       setState(() {
         height = double.parse(result["onHeightChange"].toString());
@@ -190,6 +190,11 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   }
 
   double height = 95;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
