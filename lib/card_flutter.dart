@@ -55,11 +55,6 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   }
 
   void _onEvent(dynamic event) {
-    //Receive Event
-    var data = "Start Listing..";
-    if (event.toString() != null) {
-      data = event.toString();
-    }
     handleCallbacks(event);
   }
 
@@ -88,7 +83,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
       _startTapCardSDK2();
       // return responseData;
     } catch (ex) {
-      debugPrint("Start SDK Exception >>>>>> $ex");
+    //  debugPrint("Start SDK Exception >>>>>> $ex");
     }
   }
 
@@ -107,7 +102,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
       _startTapCardSDK2();
       //  return responseData;
     } catch (ex) {
-      debugPrint("Exception >>>>>> $ex");
+     // debugPrint("Exception >>>>>> $ex");
     }
   }
 
@@ -125,12 +120,11 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
       handleCallbacks(result);
       _startTapCardSDK2();
     } catch (ex) {
-      debugPrint("Exception >>>>>> $ex");
+     // debugPrint("Exception >>>>>> $ex");
     }
   }
 
   handleCallbacks(dynamic result) {
-    debugPrint("Result Data Type : ${result}");
     if (result.containsKey("onHeightChange")) {
       setState(() {
         height = double.parse(result["onHeightChange"].toString());
@@ -154,7 +148,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
     }
 
     if (result.containsKey("onFocus")) {
-      debugPrint("On focus callback fired");
+
 
       /// onFocus Callbacks Triggered From SDK
       onFocusFunction = widget.onFocus;
@@ -162,7 +156,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
     }
 
     if (result.containsKey("onReady")) {
-      debugPrint("On ready callback fired");
+
       onReadyFunction = widget.onReady;
       onReadyFunction!();
     }

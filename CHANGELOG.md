@@ -1,3 +1,7 @@
+## 1.0.6 06-June-2024
+
+* Configuration updated, enhancements done
+
 ## 1.0.5 25-Jan-2024
 
 * Android SDK updated.

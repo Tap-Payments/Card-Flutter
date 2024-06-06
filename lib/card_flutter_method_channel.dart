@@ -1,6 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-
 import 'card_flutter_platform_interface.dart';
 
 /// An implementation of [CardFlutterPlatform] that uses method channels.
