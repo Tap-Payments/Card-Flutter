@@ -90,7 +90,7 @@ class _CardViewScreenState extends State<CardViewScreen> {
                 mCardSDKResponse = heightChange.toString();
               });
             },
-            onBindIdentification: (String? bindIdentification) {
+            onBinIdentification: (String? bindIdentification) {
               debugPrint(
                   "onBindIdentification Callback >>>>> $bindIdentification");
               setState(() {

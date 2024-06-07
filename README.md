@@ -303,8 +303,7 @@ Each parameter is linked to the  [reference](https://developers.tap.company/docs
 |--|--|--| --|--|    
 | operator| Key obtained after registering your bundle id. | True  | Map| `{"operator": {"publicKey": "pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7"}` | scope| Defines the intention of using `Card-Flutter`. | True  | String| `String scope = "Token"`|    
 | purpose|Defines the intention of using the generated Token. | True  | String| `String purpose = "Charge"` |    
-| order| Order details linked to the token. | True  | `Map`| `"order" = : {"description": "Authentication description","currency": "KWD","amount": 1,"id": "","reference": "","metadata": {}}` |    
-| invoice| Invoice id to link to the token (optional). | False  | `Map`| `invoice = {"id":""}` |    
+| order| Order details linked to the token. | True  | `Map`| `"order" = : {"description": "Authentication description","currency": "KWD","amount": 1,"id": "","reference": "","metadata": {}}` |        
 | merchant| Merchant id obtained after registering your bundle id. | True  | `Map`| `merchant = {"id":""}` |    
 | customer|Customer details for tokenization process. | True  | `Map`| ` customer = {"id":"", "name":[{"lang":"en","first":"TAP","middle":"","last":"PAYMENTS"}], "nameOnCard":"TAP PAYMENTS", "editble":true, "contact":{"email":"tap@tap.company", "phone":{"countryCode":"+965","number":"88888888"}}}` |    
 | features| Extra features for customization (optional). | False  | `Map`| `features = {"alternativeCardInputs":{"cardScanner":true, "cardNFC": true}, "acceptanceBadge":true, "customerCards":{"saveCard":false, "autoSaveCard":false}}`|    
@@ -379,7 +378,6 @@ You can use a Map<String,dynamic>  to send data to our SDK. The benefit is that 
     "reference": "",  
     "metadata": const {"a": "abc"}  
   },  
-  "invoice": {"id": ""},  
   "acceptance": {  
     "supportedPaymentAuthentications":  
                 ["3DS"],  
@@ -485,11 +483,11 @@ Below you will find more details about each parameter shared in the above tables
 2. Type: String (_required_)
 3. Possible Values:
     -   **Token**      
-        _Definition:_ Created before the payment in complete, in order to save the card and do a charge later
-    4. Example: `String scope = "Token"`
--   **AuthenticatedToken**      
-    _Definition:_ This is a token created and authenticated by the customer. Which means that the customer entered the card information and also passed the Authentication step (3DS) and got the token after.      
-    _Example:_ `String scope = "AuthenticatedToken"`
+        _Definition:_ Created before the payment in complete, in order to save the card and do a charge later  
+        Example: `String scope = "Token"`
+    -   **AuthenticatedToken**      
+        _Definition:_ This is a token created and authenticated by the customer. Which means that the customer entered the card information and also passed the Authentication step (3DS) and got the token after.      
+        _Example:_ `String scope = "AuthenticatedToken"`
 
 ## purpose[](https://developers.tap.company/docs/card-sdk-flutter#purpose)
 
@@ -503,9 +501,6 @@ Below you will find more details about each parameter shared in the above tables
 -   **Authorize**:      
     _Definition:_ Perform a hold on the amount.
     _Example:_ `String purpose = "Authorize"`
--   **Instalment Transaction**:      
-    _Definition:_ Using the token for a charge that is a part of an instalment plan.      
-    _Example:_ `String purpose = "Instalment Transaction"`
 -   **Save Token**:      
     _Definition:_ Save the card to use it afterwards in MITs.     
     _Example:_`String purpose = "Save Token"`
@@ -549,12 +544,6 @@ Below you will find more details about each parameter shared in the above tables
         _Definition:_ Generated once your account with Tap is created, which is unique for every merchant.
 4. _Example:_  ```dart    merchant = {"id":""} ```
 
-##  invoice [](https://developers.tap.company/docs/card-sdk-flutter#invoice)
-1. Definition: After the token is generated, you can use it to pay for any invoice. Each invoice will have an invoice ID which you can add here using the SDK.      
-   Note: An invoice will first show you a receipt/summary of the order you are going to pay for as well as the amount, currency, and any related field before actually opening the payment form and completing the payment. 2. Type: Dictionary (_optional_) 3. Fields:
-    -   **id**      
-        _Definition:_ Unique Invoice ID which we are trying to pay.      
-        _Example:_ ```dart invoice = {"id":""} ```
 ## customer [](https://developers.tap.company/docs/card-sdk-flutter#customer)
 
 1. Definition: Here, you will collect the information of the customer that is paying using the token generate in the SDK.
@@ -764,7 +753,7 @@ Below you will find more details about each parameter shared in the above tables
         _Definition:_ The webhook server's URL that you want to receive notifications on.      
         _Example:_  
         ``` post = {"url":""} ``` # Expected Callbacks Responses[](https://developers.tap.company/docs/card-sdk-flutter#expected-callbacks-responses)
-## onBindIdentification
+## onBinIdentification
  ```json {    
 "bin": "557607", "bank": "COMMERCIAL INTERNATIONAL BANK (EGYPT) S.A.E.", "card_brand": "MASTERCARD", "card_type": "DEBIT", "card_category": "PLATINUM", "card_scheme": "MASTERCARD", "country": "EG", "address_required": false, "api_version": "V2", "issuer_id": "bnk_TS02A1320232208a5O41810531", "brand": "MASTERCARD"} 
 ```   
@@ -782,33 +771,33 @@ The response here will differ based on the scope:
 
 ## AuthenticatedToken
 ```json {    
-"id": "auth_payer_MhIp23231913vYjl18nx94755", "object": "Authenticate", "live_mode": false, "api_version": "V2", "status": "AUTHENTICATED", "created": "1697656409282", "amount": 1, "currency": "KWD", "save_card": false, "provider": {    
-"name": "MPGS" },    
-"transaction": {    
-"timezone": "UTCZ", "created": "1697656409282" },    
-"response": {    
-"code": "000", "message": "Authentication Successful" },    
-"reference": {    
-"transaction": "tck_LV02G1720231634Xj51824647", "order": "ord_Tlh924231913OouS18vd9O487" },    
-"customer": {    
-"id": "", "name": [    
- {    
-"first_name": "test", "middle_name": "test", "last_name": "test", "locale": "en" }    
- ],    
-"name_on_card": "Ahmed", "email": "test@tap.com", "phone": {    
-"country_code": "+20", "number": "1099137777" }    
- },    
-"source": {    
-"id": "tok_RCiU23231913dWqQ18WV9Q18" },    
-"merchant": {    
-"id": "1124340" },    
-"card": {    
-"first_six": "424242", "scheme": "VISA", "brand": "VISA", "category": "", "last_four": "4242", "name": "AHMED", "expiry": {    
-"month": "02", "year": "44" },    
-"funding": "CREDIT" },    
-"authentication": {    
- "acsEci": "02", "card_enrolled": "Y", "authenticationToken": "jHyn+7YFi1EUAREAAAAvNUe6Hv8=", "transactionId": "h3q0bQzZNyBueA//+57RcpfPo6s=", "version": "3DS1", "channel": "PAYER_BROWSER", "purpose": "Transaction", "url": "https://authenticate.alpha.tap.company/redirect/auth_payer_MhIp23231913vYjl18nx94755",    
-"transStatus": "Y", "mode": "C" },    
-"redirect": {    
+"id": "auth_payer_MhIp23231913vYjl18nx94755", "object": "Authenticate", "live_mode": false, "api_version": "V2", "status": "AUTHENTICATED", "created": "1697656409282", "amount": 1, "currency": "KWD", "save_card": false, "provider": {
+"name": "MPGS" },
+"transaction": {
+"timezone": "UTCZ", "created": "1697656409282" },
+"response": {
+"code": "000", "message": "Authentication Successful" },
+"reference": {
+"transaction": "tck_LV02G1720231634Xj51824647", "order": "ord_Tlh924231913OouS18vd9O487" },
+"customer": {
+"id": "", "name": [
+{
+"first_name": "test", "middle_name": "test", "last_name": "test", "locale": "en" }
+],
+"name_on_card": "Ahmed", "email": "test@tap.com", "phone": {
+"country_code": "+20", "number": "1099137777" }
+},
+"source": {
+"id": "tok_RCiU23231913dWqQ18WV9Q18" },
+"merchant": {
+"id": "1124340" },
+"card": {
+"first_six": "424242", "scheme": "VISA", "brand": "VISA", "category": "", "last_four": "4242", "name": "AHMED", "expiry": {
+"month": "02", "year": "44" },
+"funding": "CREDIT" },
+"authentication": {
+"acsEci": "02", "card_enrolled": "Y", "authenticationToken": "jHyn+7YFi1EUAREAAAAvNUe6Hv8=", "transactionId": "h3q0bQzZNyBueA//+57RcpfPo6s=", "version": "3DS1", "channel": "PAYER_BROWSER", "purpose": "Transaction", "url": "https://authenticate.alpha.tap.company/redirect/auth_payer_MhIp23231913vYjl18nx94755",
+"transStatus": "Y", "mode": "C" },
+"redirect": {
 "url": "" } } 
 ```   

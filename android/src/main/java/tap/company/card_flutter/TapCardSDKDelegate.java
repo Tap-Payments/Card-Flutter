@@ -104,7 +104,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                     @Override
                     public void run() {
                         HashMap<String, Object> resultData = new HashMap<>();
-                        resultData.put("onBindIdentification", s);
+                        resultData.put("onBinIdentification", s);
                         eventSink.success(resultData);
                     }
                 });

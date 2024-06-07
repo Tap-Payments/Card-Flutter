@@ -54,7 +54,7 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
     }
     
     public func onBinIdentification(data: String) {
-        self.eventSink?(["onBindIdentification":data])
+        self.eventSink?(["onBinIdentification":data])
     }
     
     public func onSuccess(data: String) {

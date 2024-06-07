@@ -7,7 +7,7 @@ class TapCardViewWidget extends StatefulWidget {
   final Function(String?)? onSuccess,
       onError,
       onValidInput,
-      onBindIdentification,
+      onBinIdentification,
       onHeightChange,
       onChangeSaveCard;
   final bool generateToken;
@@ -20,7 +20,7 @@ class TapCardViewWidget extends StatefulWidget {
     this.onSuccess,
     this.onError,
     this.onValidInput,
-    this.onBindIdentification,
+    this.onBinIdentification,
     this.onHeightChange,
     this.onFocus,
     this.onChangeSaveCard,
@@ -41,7 +41,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
   late Function(String?)? onErrorFunction;
   late Function(String?)? onValidInputFunction;
   late Function(String?)? onChangeSaveCardFunction;
-  late Function(String?)? onBindIdentificationFunction;
+  late Function(String?)? onBinIdentificationFunction;
   late Function(String?)? onHeightChangeFunction;
 
   bool tokenAlreadyInProgress = false;
@@ -83,7 +83,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
       _startTapCardSDK2();
       // return responseData;
     } catch (ex) {
-    //  debugPrint("Start SDK Exception >>>>>> $ex");
+      //  debugPrint("Start SDK Exception >>>>>> $ex");
     }
   }
 
@@ -102,7 +102,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
       _startTapCardSDK2();
       //  return responseData;
     } catch (ex) {
-     // debugPrint("Exception >>>>>> $ex");
+      // debugPrint("Exception >>>>>> $ex");
     }
   }
 
@@ -120,7 +120,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
       handleCallbacks(result);
       _startTapCardSDK2();
     } catch (ex) {
-     // debugPrint("Exception >>>>>> $ex");
+      // debugPrint("Exception >>>>>> $ex");
     }
   }
 
@@ -132,13 +132,12 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
       });
     }
 
-    if (result.containsKey("onBindIdentification")) {
+    if (result.containsKey("onBinIdentification")) {
       /// onBindIdentification Callbacks Triggered From SDK
-      var resultOfBindIdentification =
-          result["onBindIdentification"].toString();
+      var resultOfBindIdentification = result["onBinIdentification"].toString();
 
-      onBindIdentificationFunction = widget.onBindIdentification;
-      onBindIdentificationFunction!(resultOfBindIdentification.toString());
+      onBinIdentificationFunction = widget.onBinIdentification;
+      onBinIdentificationFunction!(resultOfBindIdentification.toString());
     }
 
     if (result.containsKey("onError")) {
@@ -148,15 +147,12 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
     }
 
     if (result.containsKey("onFocus")) {
-
-
       /// onFocus Callbacks Triggered From SDK
       onFocusFunction = widget.onFocus;
       onFocusFunction!();
     }
 
     if (result.containsKey("onReady")) {
-
       onReadyFunction = widget.onReady;
       onReadyFunction!();
     }
