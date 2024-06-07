@@ -90,11 +90,11 @@ class _CardViewScreenState extends State<CardViewScreen> {
                 mCardSDKResponse = heightChange.toString();
               });
             },
-            onBinIdentification: (String? bindIdentification) {
+            onBinIdentification: (String? binIdentification) {
               debugPrint(
-                  "onBindIdentification Callback >>>>> $bindIdentification");
+                  "onBinIdentification Callback >>>>> $binIdentification");
               setState(() {
-                mCardSDKResponse = bindIdentification.toString();
+                mCardSDKResponse = binIdentification.toString();
               });
             },
             onChangeSaveCard: (String? saveCard) {

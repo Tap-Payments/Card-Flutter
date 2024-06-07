@@ -209,9 +209,9 @@ class _CardViewScreenState extends State<CardViewScreen> {
                 mCardSDKResponse = heightChange.toString();  
               });  
             },  
-            onBindIdentification: (String? bindIdentification) {  
+            onBinIdentification: (String? bindIdentification) {  
        debugPrint(  
-                   "onBindIdentification Callback >>>>> $bindIdentification");  
+                   "onBinIdentification Callback >>>>> $bindIdentification");  
               setState(() {  
                 mCardSDKResponse = bindIdentification.toString();  
               });  
@@ -406,7 +406,7 @@ TapCardViewWidget(
   },  
   onHeightChange: (String? heightChange) {  
   },  
-  onBindIdentification: (String? bindIdentification) {  
+  onBinIdentification: (String? bindIdentification) {  
   },  
   onChangeSaveCard: (String? saveCard) {  
 
@@ -628,7 +628,7 @@ Below you will find more details about each parameter shared in the above tables
     -   **alternativeCardInput**      
         _Definition:_ You can also, either add the card information by scanning the card or by using NFC.      
         Note: In order for that to work, you will need to add the Camera usage description to your info.plist file like so ```xml <key>NSCameraUsageDescription</key> <string>Card SDK needs it for scanner functionality</string> ``` _Fields:_ 1.  **cardScanner** Definition: A boolean to indicate whether or not you want to display the scan card icon.
-5. - _Example:_
+5.  _Example:_
 ```dart
  "features": {  
   "customerCards": {  
@@ -799,5 +799,7 @@ The response here will differ based on the scope:
 "acsEci": "02", "card_enrolled": "Y", "authenticationToken": "jHyn+7YFi1EUAREAAAAvNUe6Hv8=", "transactionId": "h3q0bQzZNyBueA//+57RcpfPo6s=", "version": "3DS1", "channel": "PAYER_BROWSER", "purpose": "Transaction", "url": "https://authenticate.alpha.tap.company/redirect/auth_payer_MhIp23231913vYjl18nx94755",
 "transStatus": "Y", "mode": "C" },
 "redirect": {
-"url": "" } } 
+"url": "" } 
+} 
+
 ```   
