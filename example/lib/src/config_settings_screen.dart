@@ -491,7 +491,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                   ),
                 );
 
-
                 if (result != null) {
                   selectedPaymentAuthentications = result;
                   setState(() {});
@@ -617,7 +616,7 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                             },
                             "acceptanceBadge": acceptanceBadge,
                           },
-                          "post": const {"url": ""},
+                          "post": {"url": postURLController.text},
                           "customer": {
                             "id": customerIdController.text,
                             "name": const [
@@ -644,8 +643,8 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                               "cvv": cvv,
                             }
                           },
-                          "merchant": const {
-                            "id": "",
+                          "merchant": {
+                            "id": merchantIdController.text,
                           },
                           "interface": {
                             "colorStyle": selectedColorStyleValue,
