@@ -32,15 +32,12 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
   /// Text Form Fields
   /// Variable Declaration
   TextEditingController publicKeyController = TextEditingController(
-    text: "pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7",
+    text: "",
   );
   TextEditingController transactionReferenceController = TextEditingController(
     text: "",
   );
-  TextEditingController transactionIdController = TextEditingController();
-  TextEditingController transactionContractIdController =
-      TextEditingController();
-  TextEditingController orderIdController = TextEditingController();
+
   TextEditingController orderAmountController =
       TextEditingController(text: "1");
   TextEditingController orderCurrencyController = TextEditingController(
@@ -51,6 +48,7 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
   );
   TextEditingController linkToAnInvoiceController = TextEditingController();
   TextEditingController merchantIdController = TextEditingController();
+  TextEditingController postURLController = TextEditingController();
   TextEditingController customerIdController = TextEditingController();
   TextEditingController nameOnCardController = TextEditingController(
     text: "TAP PAYMENTS",
@@ -192,71 +190,72 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
-          cancelButton: CupertinoActionSheetAction(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text(
-              "Cancel",
-              style: TextStyle(
-                color: CupertinoColors.activeBlue,
-                fontWeight: FontWeight.bold,
-              ),
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text(
+            "Cancel",
+            style: TextStyle(
+              color: CupertinoColors.activeBlue,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          actions: items.map(
-            (e) {
-              return CupertinoActionSheetAction(
-                onPressed: () {
-                  if (scopeSelection == true) {
-                    setState(() {
-                      selectedScopeValue = e;
-                    });
-                  }
+        ),
+        actions: items.map(
+          (e) {
+            return CupertinoActionSheetAction(
+              onPressed: () {
+                if (scopeSelection == true) {
+                  setState(() {
+                    selectedScopeValue = e;
+                  });
+                }
 
-                  if (purposeSelection == true) {
-                    setState(() {
-                      selectedPurposeValue = e;
-                    });
-                  }
-                  if (localeSelection == true) {
-                    setState(() {
-                      selectedLocaleValue = e;
-                    });
-                  }
-                  if (themeSelection == true) {
-                    setState(() {
-                      selectedThemeValue = e;
-                    });
-                  }
-                  if (edgesSelection == true) {
-                    setState(() {
-                      selectedEdgesValue = e;
-                    });
-                  }
-                  if (cardDirectionSelection == true) {
-                    setState(() {
-                      selectedCardDirectionValue = e;
-                    });
-                  }
-                  if (colorStyleSelection == true) {
-                    setState(() {
-                      selectedColorStyleValue = e;
-                    });
-                  }
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  e,
-                  style: TextStyle(
-                    color: CupertinoColors.activeBlue,
-                    fontWeight:
-                        e == "Cancel" ? FontWeight.bold : FontWeight.normal,
-                  ),
+                if (purposeSelection == true) {
+                  setState(() {
+                    selectedPurposeValue = e;
+                  });
+                }
+                if (localeSelection == true) {
+                  setState(() {
+                    selectedLocaleValue = e;
+                  });
+                }
+                if (themeSelection == true) {
+                  setState(() {
+                    selectedThemeValue = e;
+                  });
+                }
+                if (edgesSelection == true) {
+                  setState(() {
+                    selectedEdgesValue = e;
+                  });
+                }
+                if (cardDirectionSelection == true) {
+                  setState(() {
+                    selectedCardDirectionValue = e;
+                  });
+                }
+                if (colorStyleSelection == true) {
+                  setState(() {
+                    selectedColorStyleValue = e;
+                  });
+                }
+                Navigator.pop(context);
+              },
+              child: Text(
+                e,
+                style: TextStyle(
+                  color: CupertinoColors.activeBlue,
+                  fontWeight:
+                      e == "Cancel" ? FontWeight.bold : FontWeight.normal,
                 ),
-              );
-            },
-          ).toList()),
+              ),
+            );
+          },
+        ).toList(),
+      ),
     );
   }
 
@@ -309,18 +308,20 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
               },
             ),
             gapH24,
-            const LabelTextWidget(label: "Transaction.PaymentAgreement"),
+            const LabelTextWidget(label: "MERCHANT"),
             gapH4,
             CustomInputFieldWidget(
               fieldName: 'id',
-              controller: transactionIdController,
-              hintText: "Enter PaymentAgreement's Id",
+              controller: merchantIdController,
+              hintText: "Enter Merchant Id",
             ),
-            const CustomDividerWidget(),
+            gapH24,
+            const LabelTextWidget(label: "POST"),
+            gapH4,
             CustomInputFieldWidget(
-              fieldName: 'contract.id',
-              controller: transactionContractIdController,
-              hintText: "Enter contract's Id",
+              fieldName: 'url',
+              controller: postURLController,
+              hintText: "Enter Post URL",
             ),
             gapH24,
             const LabelTextWidget(label: "Order"),
@@ -437,7 +438,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                     ),
                   ),
                 );
-                debugPrint("Selected supportedFundSource >>>> $result");
 
                 if (result != null) {
                   selectedSupportedSchemes = result;
@@ -465,8 +465,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                   ),
                 );
 
-                debugPrint("Selected supportedFundSource >>>> $result");
-
                 if (result != null) {
                   selectedSupportedFundSources = result;
                   setState(() {});
@@ -493,8 +491,6 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                   ),
                 );
 
-                debugPrint(
-                    "Selected supportedPaymentAuthentications >>>> $result");
 
                 if (result != null) {
                   selectedPaymentAuthentications = result;
@@ -648,7 +644,9 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                               "cvv": cvv,
                             }
                           },
-                          "merchant": const {"id": "1124340"},
+                          "merchant": const {
+                            "id": "",
+                          },
                           "interface": {
                             "colorStyle": selectedColorStyleValue,
                             "theme": selectedThemeValue,
@@ -668,7 +666,7 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                             "description": orderDescriptionController.text,
                             "currency": orderCurrencyController.text,
                             "amount": orderAmountController.text,
-                            "id": orderIdController.text,
+                            "id": "",
                             "reference": transactionReferenceController.text,
                             "metadata": const {"a": "abc"}
                           },

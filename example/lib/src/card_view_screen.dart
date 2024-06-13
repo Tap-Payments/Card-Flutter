@@ -138,7 +138,7 @@ class _CardViewScreenState extends State<CardViewScreen> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
-                child: Text(
+                child: SelectableText(
                   mCardSDKResponse == null
                       ? ""
                       : "SDK RESPONSE : $mCardSDKResponse",
