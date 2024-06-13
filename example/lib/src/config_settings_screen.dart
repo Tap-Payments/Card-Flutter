@@ -648,7 +648,7 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                               "cvv": cvv,
                             }
                           },
-                          "merchant": {"id": merchantIdController.text},
+                          "merchant": const {"id": "1124340"},
                           "interface": {
                             "colorStyle": selectedColorStyleValue,
                             "theme": selectedThemeValue,

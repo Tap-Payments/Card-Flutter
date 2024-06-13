@@ -26,7 +26,6 @@ class _CardViewScreenState extends State<CardViewScreen> {
   @override
   void initState() {
     showTapTokenButton = false;
-    debugPrint("SHOW TAP TOKEN BUTTON >>> $showTapTokenButton");
     super.initState();
   }
 
@@ -43,11 +42,12 @@ class _CardViewScreenState extends State<CardViewScreen> {
         leading: IconButton(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ConfigSettingsScreen(),
-                ),
-                (route) => false);
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ConfigSettingsScreen(),
+              ),
+              (route) => false,
+            );
           },
           icon: const Icon(
             CupertinoIcons.back,
@@ -60,15 +60,11 @@ class _CardViewScreenState extends State<CardViewScreen> {
           TapCardViewWidget(
             sdkConfiguration: widget.dictionaryMap,
             onReady: () {
-              debugPrint("onReady Callback >>>>>");
-
               setState(() {
                 showTapTokenButton = true;
               });
             },
             onFocus: () {
-              debugPrint("onFocus Callback >>>>>");
-
               setState(() {
                 generateToken = false;
               });
@@ -91,8 +87,6 @@ class _CardViewScreenState extends State<CardViewScreen> {
               });
             },
             onBinIdentification: (String? binIdentification) {
-              debugPrint(
-                  "onBinIdentification Callback >>>>> $binIdentification");
               setState(() {
                 mCardSDKResponse = binIdentification.toString();
               });

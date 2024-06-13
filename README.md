@@ -41,7 +41,7 @@ In the  `pubspec.yaml` of your flutter project, add the following dependency:
 
 dependencies:
 
-```card_flutter: 1.0.6```
+```card_flutter: 1.0.7```
 
 In your library add the following import:
 

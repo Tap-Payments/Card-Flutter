@@ -1,3 +1,9 @@
+## 1.0.7 13-June-2024
+
+* Android SDK updated
+* iOS SDK updated
+* Merchant Id is required now
+
 ## 1.0.6 06-June-2024
 
 * Configuration updated, enhancements done

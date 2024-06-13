@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// ignore: must_be_immutable
 class TapCardViewWidget extends StatefulWidget {
   final Function()? onReady, onFocus;
   final Function(String?)? onSuccess,
@@ -81,7 +80,6 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
       );
       handleCallbacks(result);
       _startTapCardSDK2();
-      // return responseData;
     } catch (ex) {
       //  debugPrint("Start SDK Exception >>>>>> $ex");
     }
@@ -100,7 +98,6 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget> {
 
       handleCallbacks(result);
       _startTapCardSDK2();
-      //  return responseData;
     } catch (ex) {
       // debugPrint("Exception >>>>>> $ex");
     }
