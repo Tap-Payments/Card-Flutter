@@ -66,9 +66,10 @@ Noting that in Flutter, you will use our card form like any other widget. While 
 
 -   **Creating the TapCardViewWidget from code**
 1. Head to your controller where you want to display the `TapCardViewWidget` as a widget.
-    2. Import `Card-Flutter` as follows `import 'package:card_flutter/models/models.dart`.
-    3. In the coming code sample, we will show how to embed the card form within your widget tree.
-```dart TapCardViewWidget( sdkConfiguration: const {}, generateToken: false // More on this later),   
+2. Import `Card-Flutter` as follows `import 'package:card_flutter/models/models.dart`.
+3. In the coming code sample, we will show how to embed the card form within your widget tree.
+```dart
+ TapCardViewWidget( sdkConfiguration: const {}, generateToken: false // More on this later),   
 ```
 ## Simple Integration[](https://developers.tap.company/docs/card-sdk-flutter#simple-integration)
 
@@ -717,32 +718,32 @@ The response here will differ based on the scope:
  ```   
 ## AuthenticatedToken
 ```json { "id": "auth_payer_MhIp23231913vYjl18nx94755", "object": "Authenticate", "live_mode": false, "api_version": "V2", "status": "AUTHENTICATED", "created": "1697656409282", "amount": 1, "currency": "KWD", "save_card": false, "provider": {  
-"name": "MPGS" },  
-"transaction": {  
-"timezone": "UTCZ", "created": "1697656409282" },  
-"response": {  
-"code": "000", "message": "Authentication Successful" },  
-"reference": {  
-"transaction": "tck_LV02G1720231634Xj51824647", "order": "ord_Tlh924231913OouS18vd9O487" },  
-"customer": {  
-"id": "", "name": [  
-{  
-"first_name": "test", "middle_name": "test", "last_name": "test", "locale": "en" }  
-],  
-"name_on_card": "Ahmed", "email": "test@tap.com", "phone": {  
-"country_code": "+20", "number": "1099137777" }  
-},  
-"source": {  
-"id": "tok_RCiU23231913dWqQ18WV9Q18" },  
-"merchant": {  
-"id": "1124340" },  
-"card": {  
-"first_six": "424242", "scheme": "VISA", "brand": "VISA", "category": "", "last_four": "4242", "name": "AHMED", "expiry": {  
-"month": "02", "year": "44" },  
-"funding": "CREDIT" },  
-"authentication": {  
-"acsEci": "02", "card_enrolled": "Y", "authenticationToken": "jHyn+7YFi1EUAREAAAAvNUe6Hv8=", "transactionId": "h3q0bQzZNyBueA//+57RcpfPo6s=", "version": "3DS1", "channel": "PAYER_BROWSER", "purpose": "Transaction", "url": "https://authenticate.alpha.tap.company/redirect/auth_payer_MhIp23231913vYjl18nx94755",  
-"transStatus": "Y", "mode": "C" },  
-"redirect": {  
+"name": "MPGS" },
+"transaction": {
+"timezone": "UTCZ", "created": "1697656409282" },
+"response": {
+"code": "000", "message": "Authentication Successful" },
+"reference": {
+"transaction": "tck_LV02G1720231634Xj51824647", "order": "ord_Tlh924231913OouS18vd9O487" },
+"customer": {
+"id": "", "name": [
+{
+"first_name": "test", "middle_name": "test", "last_name": "test", "locale": "en" }
+],
+"name_on_card": "Ahmed", "email": "test@tap.com", "phone": {
+"country_code": "+20", "number": "1099137777" }
+},
+"source": {
+"id": "tok_RCiU23231913dWqQ18WV9Q18" },
+"merchant": {
+"id": "1124340" },
+"card": {
+"first_six": "424242", "scheme": "VISA", "brand": "VISA", "category": "", "last_four": "4242", "name": "AHMED", "expiry": {
+"month": "02", "year": "44" },
+"funding": "CREDIT" },
+"authentication": {
+"acsEci": "02", "card_enrolled": "Y", "authenticationToken": "jHyn+7YFi1EUAREAAAAvNUe6Hv8=", "transactionId": "h3q0bQzZNyBueA//+57RcpfPo6s=", "version": "3DS1", "channel": "PAYER_BROWSER", "purpose": "Transaction", "url": "https://authenticate.alpha.tap.company/redirect/auth_payer_MhIp23231913vYjl18nx94755",
+"transStatus": "Y", "mode": "C" },
+"redirect": {
 "url": "" } }   
 ```
