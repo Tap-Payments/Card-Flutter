@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.logging.LogRecord;
 
-import company.tap.tapcardformkit.open.DataConfiguration;
+import company.tap.tapcardformkit.open.CardDataConfiguration;
 import company.tap.tapcardformkit.open.TapCardStatusDelegate;
 import company.tap.tapcardformkit.open.web_wrapper.TapCardConfiguration;
 import company.tap.tapcardformkit.open.web_wrapper.TapCardKit;
@@ -31,7 +31,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
         PluginRegistry.RequestPermissionsResultListener, TapCardStatusDelegate {
 
     private Activity activity;
-    private DataConfiguration dataConfiguration;
+    private CardDataConfiguration dataConfiguration;
     private TapCardKit tapCardKit;
     public MethodChannel.Result pendingResult;
 
@@ -49,7 +49,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
 
     public TapCardSDKDelegate(Activity _activity) {
         this.activity = _activity;
-        this.dataConfiguration = DataConfiguration.INSTANCE;
+        this.dataConfiguration = CardDataConfiguration.INSTANCE;
         this.tapCardKit = new TapCardKit(_activity.getApplicationContext());
 
     }
@@ -70,10 +70,10 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
 
             if (generateToken) {
                 System.out.println("Coming here for generate token");
-                DataConfiguration.INSTANCE.generateToken(tapCardKit);
+                CardDataConfiguration.INSTANCE.generateToken(tapCardKit);
             } else {
                 assert tapCardConfigurations != null;
-                DataConfiguration.INSTANCE.initializeSDK(activity1, tapCardConfigurations, this, tapCardKit, cardNumber, cardExpiry);
+                CardDataConfiguration.INSTANCE.initializeSDK(activity1, tapCardConfigurations, this, tapCardKit, cardNumber, cardExpiry);
                 //  DataConfiguration.INSTANCE.addTapCardStatusDelegate(this);
 
             }
@@ -111,7 +111,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
     }
 
     @Override
-    public void onError(@NonNull String s) {
+    public void onCardError(@NonNull String s) {
 
         handler.post(
                 new Runnable() {
@@ -125,7 +125,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
     }
 
     @Override
-    public void onFocus() {
+    public void onCardFocus() {
         handler.post(
                 new Runnable() {
                     @Override
@@ -168,7 +168,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
 
 
     @Override
-    public void onReady() {
+    public void onCardReady() {
 
         System.out.println("ON READY CALLED  " + onReadyCallbackTriggered);
         onReadyCallbackTriggered = false;
@@ -212,7 +212,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
     }
 
     @Override
-    public void onSuccess(@NonNull String s) {
+    public void onCardSuccess(@NonNull String s) {
 
         handler.post(
                 new Runnable() {

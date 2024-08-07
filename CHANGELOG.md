@@ -1,3 +1,8 @@
+## 1.0.8 07-Aug-2024
+
+* Android SDK updated
+* Duplicated class/variables names issue fixed
+
 ## 1.0.7 13-June-2024
 
 * Android SDK updated
