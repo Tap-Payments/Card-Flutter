@@ -603,78 +603,81 @@ class _ConfigSettingsScreenState extends State<ConfigSettingsScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CardViewScreen(
+                      builder: (context) => const CardViewScreen(
                         dictionaryMap: {
+                          "order": {
+                            "description": "Authentication description",
+                            "id": "",
+                            "amount": 1,
+                            "currency": "SAR",
+                            "reference": "order_ref",
+                            "metadata": {"key": "value"}
+                          },
+                          "purpose": "Charge",
+                          "scope": "Token",
+                          "post": {"url": ""},
                           "features": {
                             "customerCards": {
-                              "saveCard": saveCard,
-                              "autoSaveCard": autoSaveCard
+                              "autoSaveCard": true,
+                              "saveCard": true
                             },
-                            "alternativeCardInputs": {
-                              "cardScanner": scanner,
-                              "cardNFC": nfc,
-                            },
-                            "acceptanceBadge": acceptanceBadge,
+                            "alternativeCardInputs": {"cardScanner": true},
+                            "acceptanceBadge": true
                           },
-                          "post": {"url": postURLController.text},
                           "customer": {
-                            "id": customerIdController.text,
-                            "name": const [
-                              {
-                                "first": "TAP",
-                                "middle": "",
-                                "lang": "en",
-                                "last": "PAYMENTS"
-                              }
-                            ],
-                            "editable": editable,
-                            "contact": const {
+                            "contact": {
                               "email": "tap@tap.company",
                               "phone": {
                                 "countryCode": "+965",
                                 "number": "88888888"
                               }
                             },
-                            "nameOnCard": nameOnCardController.text,
+                            "name": [
+                              {
+                                "lang": "en",
+                                "first": "TAP",
+                                "middle": "",
+                                "last": "PAYMENTS"
+                              }
+                            ],
+                            "nameOnCard": "TAP PAYMENTS",
+                            "id": "",
+                            "editable": true
+                          },
+                          "acceptance": {
+                            "supportedSchemes": [
+                              "AMERICAN_EXPRESS",
+                              "VISA",
+                              "MASTERCARD",
+                              "OMANNET",
+                              "MADA"
+                            ],
+                            "supportedFundSource": ["CREDIT", "DEBIT"],
+                            "supportedPaymentAuthentications": ["3DS"]
+                          },
+                          "operator": {
+                            "publicKey": "pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7"
                           },
                           "fieldVisibility": {
-                            "card": {
-                              "cardHolder": cardHolder,
-                              "cvv": cvv,
-                            }
+                            "card": {"cvv": true, "cardHolder": true}
                           },
-                          "merchant": {
-                            "id": merchantIdController.text,
+                          "merchant": {"id": "1124340"},
+                          "invoice": {"id": "inv"},
+                          "transaction": {
+                            "paymentAgreement": {
+                              "id": "",
+                              "contract": {"id": ""}
+                            },
+                            "reference": "trx_ref"
                           },
                           "interface": {
-                            "colorStyle": selectedColorStyleValue,
-                            "theme": selectedThemeValue,
-                            "locale": selectedLocaleValue,
-                            "edges": selectedEdgesValue,
-                            "cardDirection": selectedCardDirectionValue,
-                            "loader": loader
-                          },
-                          "purpose": selectedPurposeValue,
-                          "operator": {
-                            "publicKey": Platform.isAndroid
-                                ? publicKeyController.text
-                                : publicKeyController.text,
-                          },
-                          "scope": selectedScopeValue,
-                          "order": {
-                            "description": orderDescriptionController.text,
-                            "currency": orderCurrencyController.text,
-                            "amount": orderAmountController.text,
-                            "id": "",
-                            "reference": transactionReferenceController.text,
-                            "metadata": const {"a": "abc"}
-                          },
-                          "invoice": {"id": linkToAnInvoiceController.text},
-                          "acceptance": {
-                            "supportedPaymentAuthentications":
-                                selectedPaymentAuthentications,
-                            "supportedFundSource": selectedSupportedFundSources,
-                            "supportedSchemes": selectedSupportedSchemes,
+                            "powered": true,
+                            "loader": true,
+                            "theme": "light",
+                            "cardDirection": "LTR",
+                            "colorStyle": "colored",
+                            "edges": "curved",
+                            "locale": "dynamic"
                           }
                         },
                       ),

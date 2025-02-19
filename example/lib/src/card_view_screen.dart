@@ -93,7 +93,7 @@ class _CardViewScreenState extends State<CardViewScreen> {
             },
             onChangeSaveCard: (String? saveCard) {
               setState(() {
-                mCardSDKResponse = saveCard.toString();
+                mCardSDKResponse = "saveCard $saveCard ".toString();
               });
             },
             onError: (String? error) {

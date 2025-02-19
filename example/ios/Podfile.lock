@@ -1,5 +1,5 @@
 PODS:
-  - Card-iOS (0.0.32):
+  - Card-iOS (1.0.3):
     - SharedDataModels-iOS
     - SnapKit
     - SwiftEntryKit
@@ -7,7 +7,7 @@ PODS:
     - TapCardScannerWebWrapper-iOS
     - TapFontKit-iOS
   - card_flutter (1.0.0):
-    - Card-iOS (= 0.0.32)
+    - Card-iOS (= 1.0.3)
     - Flutter
   - Flutter (1.0.0)
   - integration_test (0.0.1):
@@ -22,7 +22,7 @@ PODS:
     - SharedDataModels-iOS
     - TapCardVlidatorKit-iOS
   - TapCardVlidatorKit-iOS (1.0.24)
-  - TapFontKit-iOS (0.0.10):
+  - TapFontKit-iOS (0.0.11):
     - TapSwiftFixesV2
   - TapSwiftFixesV2 (1.0.3):
     - TapSwiftFixesV2/CoreGraphics (= 1.0.3)
@@ -58,19 +58,19 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/integration_test/ios"
 
 SPEC CHECKSUMS:
-  Card-iOS: d5e538adead1cc27c0b11056a9a8dbe0e29770cc
-  card_flutter: 5974fed3c84b5c0cdf52ffecf483dbf796baaf1f
+  Card-iOS: ea89671e539b90fb357294a9dd754e4374bd6e7d
+  card_flutter: 5d51db5c4414e0b795fdb3de00bfa48364496158
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  integration_test: ce0a3ffa1de96d1a89ca0ac26fca7ea18a749ef4
+  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   SharedDataModels-iOS: 03d22b8a256a6ce698180b24d3ff8fefe42707b1
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SwiftEntryKit: 61b5fa36f34a97dd8013e48a7345bc4c4720be9a
   SwiftyRSA: 8c6dd1ea7db1b8dc4fb517a202f88bb1354bc2c6
   TapCardScannerWebWrapper-iOS: c8f05e90f418e910600db43e082a81ae6e5af8ad
   TapCardVlidatorKit-iOS: 05d3e644dddd6aa52dd95cc85a2c41f7ce0ba2f9
-  TapFontKit-iOS: cd7376aec8f7edd97145cd0daa5ce584859429c1
+  TapFontKit-iOS: c17f595e4d94b5c5c49fda159596a7f23bdffb94
   TapSwiftFixesV2: ea726f752b6259d9e44624039fd6bad94b2a8633
 
 PODFILE CHECKSUM: a57f30d18f102dd3ce366b1d62a55ecbef2158e5
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

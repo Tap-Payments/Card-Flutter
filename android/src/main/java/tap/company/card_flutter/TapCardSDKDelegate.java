@@ -226,6 +226,32 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
 
     }
 
+    @Override
+    public void onChangeSaveCard(boolean b) {
+        handler.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            HashMap<String, Object> resultData = new HashMap<>();
+                            resultData.put("onChangeSaveCard", b);
+                            eventSink.success(resultData);
+
+                        } catch (IllegalStateException exception) {
+                            // Output expected IllegalStateException.
+                            System.out.println("Exception " + exception);
+                            // Logging.log(exception);
+                        } catch (Throwable throwable) {
+                            // Output unexpected Throwables.
+                            System.out.println("Exception throwable");
+                            // Logging.log(throwable, false);
+                        }
+
+
+                    }
+                });
+    }
 
     @Override
     public void onValidInput(@NonNull String s) {
@@ -255,6 +281,4 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                 });
 
     }
-
-
 }
