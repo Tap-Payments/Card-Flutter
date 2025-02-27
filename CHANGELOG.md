@@ -1,3 +1,10 @@
+## 1.0.10 27-FEB-2025
+
+* Enhance example app
+* Android SDK updated
+* iOS SDK updated
+* Add save card option callback
+
 ## 1.0.9 20-FEB-2025
 
 * Android SDK updated
