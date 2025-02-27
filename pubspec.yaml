@@ -1,6 +1,6 @@
 name: card_flutter
 description: Accept a payment with one or multiple payment methods securely. Powered by Tap Payments.
-version: 1.0.9
+version: 1.0.10
 homepage: https://github.com/Tap-Payments/Card-Flutter
 
 environment:
