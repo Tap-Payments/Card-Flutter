@@ -2,14 +2,9 @@ import 'package:card_flutter/card_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'config_settings_screen.dart';
-
 class CardViewScreen extends StatefulWidget {
-  final Map<String, dynamic> dictionaryMap;
-
   const CardViewScreen({
     super.key,
-    required this.dictionaryMap,
   });
 
   @override
@@ -39,26 +34,79 @@ class _CardViewScreenState extends State<CardViewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Plugin example app'),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ConfigSettingsScreen(),
-              ),
-              (route) => false,
-            );
-          },
-          icon: const Icon(
-            CupertinoIcons.back,
-          ),
-        ),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TapCardViewWidget(
-            sdkConfiguration: widget.dictionaryMap,
+            sdkConfiguration: {
+              "order": {
+                "description": "Authentication description",
+                "id": "",
+                "amount": 1,
+                "currency": "SAR",
+                "reference": "order_ref",
+                "metadata": {"key": "value"}
+              },
+              "purpose": "Charge",
+              "scope": "Token",
+              "post": {"url": ""},
+              "features": {
+                "customerCards": {"autoSaveCard": true, "saveCard": true},
+                "alternativeCardInputs": {"cardScanner": true},
+                "acceptanceBadge": true
+              },
+              "customer": {
+                "contact": {
+                  "email": "tap@tap.company",
+                  "phone": {"countryCode": "+965", "number": "88888888"}
+                },
+                "name": [
+                  {
+                    "lang": "en",
+                    "first": "TAP",
+                    "middle": "",
+                    "last": "PAYMENTS"
+                  }
+                ],
+                "nameOnCard": "TAP PAYMENTS",
+                "id": "",
+                "editable": true
+              },
+              "acceptance": {
+                "supportedSchemes": [
+                  "AMERICAN_EXPRESS",
+                  "VISA",
+                  "MASTERCARD",
+                  "OMANNET",
+                  "MADA"
+                ],
+                "supportedFundSource": ["CREDIT", "DEBIT"],
+                "supportedPaymentAuthentications": ["3DS"]
+              },
+              "operator": {"publicKey": "pk_test_*****************"},
+              "fieldVisibility": {
+                "card": {"cvv": true, "cardHolder": true}
+              },
+              "merchant": {"id": "*******"},
+              "invoice": {"id": "inv"},
+              "transaction": {
+                "paymentAgreement": {
+                  "id": "",
+                  "contract": {"id": ""}
+                },
+                "reference": "trx_ref"
+              },
+              "interface": {
+                "powered": true,
+                "loader": true,
+                "theme": "light",
+                "cardDirection": "LTR",
+                "colorStyle": "colored",
+                "edges": "curved",
+                "locale": "dynamic"
+              }
+            },
             onReady: () {
               setState(() {
                 showTapTokenButton = true;

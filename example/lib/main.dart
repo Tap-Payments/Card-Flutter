@@ -1,3 +1,4 @@
+import 'package:card_flutter_example/src/card_view_screen.dart';
 import 'package:card_flutter_example/src/config_settings_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const ConfigSettingsScreen(),
+      home: const CardViewScreen(),
     );
   }
 }
