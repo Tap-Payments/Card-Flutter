@@ -106,11 +106,11 @@ class _CardViewScreenState extends State<CardViewScreen> {
                 "supportedFundSource": ["CREDIT", "DEBIT"],
                 "supportedPaymentAuthentications": ["3DS"]
               },
-              "operator": {"publicKey": "pk_test_*****************"},
+              "operator": {"publicKey": "pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7"},
               "fieldVisibility": {
                 "card": {"cvv": true, "cardHolder": true}
               },
-              "merchant": {"id": "*******"},
+              "merchant": {"id": "1124340"},
               "invoice": {"id": "inv"},
               "transaction": {
                 "paymentAgreement": {
