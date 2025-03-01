@@ -1,3 +1,7 @@
+## 1.0.11 1-MAR-2025
+
+* Fix eventSink payload in onChangeSaveCard method to reflect correct enabled state
+
 ## 1.0.10 27-FEB-2025
 
 * Enhance example app
