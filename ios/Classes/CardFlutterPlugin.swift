@@ -79,7 +79,7 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
     }
     
     public func onChangeSaveCard(enabled: Bool) {
-        self.eventSink?(["onChangeSaveCard":"\(!enabled)"])
+        self.eventSink?(["onChangeSaveCard":"\(enabled)"])
     }
     
     
