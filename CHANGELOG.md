@@ -1,3 +1,7 @@
+## 1.0.12 21-APR-2025
+
+* Fix android Scanner Crash issue
+
 ## 1.0.11 1-MAR-2025
 
 * Fix eventSink payload in onChangeSaveCard method to reflect correct enabled state
