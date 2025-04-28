@@ -1,3 +1,7 @@
+## 1.0.13 21-APR-2025
+
+* Fix android crash issue when using scanner with card reader
+
 ## 1.0.12 21-APR-2025
 
 * Fix android Scanner Crash issue
