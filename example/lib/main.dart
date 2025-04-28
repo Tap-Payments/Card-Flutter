@@ -60,74 +60,94 @@ class _CardViewScreenState extends State<CardViewScreen> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          const Text("hoo hook,"),
           TapCardViewWidget(
             sdkConfiguration: const {
-              "order": {
-                "description": "Authentication description",
-                "id": "",
-                "amount": 1,
-                "currency": "SAR",
-                "reference": "order_ref",
-                "metadata": {"key": "value"}
+              'operator': {
+                'publicKey': 'pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7',
               },
-              "purpose": "Charge",
-              "scope": "Token",
-              "post": {"url": ""},
-              "features": {
-                "customerCards": {"autoSaveCard": true, "saveCard": true},
-                "alternativeCardInputs": {"cardScanner": true},
-                "acceptanceBadge": true
+              'scope': 'Token',
+              'order': {
+                'reference': '',
+                'amount': 1,
+                'description': '',
+                'currency': 'KWD',
+                'id': '',
               },
-              "customer": {
-                "contact": {
-                  "email": "tap@tap.company",
-                  "phone": {"countryCode": "+965", "number": "88888888"}
+              'customer': {
+                'nameOnCard': '',
+                'editable': true,
+                'contact': {
+                  'phone': {
+                    'number': '011',
+                    'countryCode': '+20',
+                  },
+                  'email': 'test@gmail.com',
                 },
-                "name": [
-                  const {
-                    "lang": "en",
-                    "first": "TAP",
-                    "middle": "",
-                    "last": "PAYMENTS"
+                'name': [
+                  {
+                    'middle': 'middle',
+                    'last': 'last',
+                    'lang': 'en',
+                    'first': 'first',
                   }
                 ],
-                "nameOnCard": "TAP PAYMENTS",
-                "id": "",
-                "editable": true
               },
-              "acceptance": {
-                "supportedSchemes": [
-                  "AMERICAN_EXPRESS",
-                  "VISA",
-                  "MASTERCARD",
-                  "OMANNET",
-                  "MADA"
-                ],
-                "supportedFundSource": ["CREDIT", "DEBIT"],
-                "supportedPaymentAuthentications": ["3DS"]
-              },
-              "operator": {"publicKey": "pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7"},
-              "fieldVisibility": {
-                "card": {"cvv": true, "cardHolder": true}
-              },
-              "merchant": {"id": "1124340"},
-              "invoice": {"id": "inv"},
-              "transaction": {
-                "paymentAgreement": {
-                  "id": "",
-                  "contract": {"id": ""}
+              'purpose': 'CHARGE',
+              'transaction': {
+                'metadata': {
+                  'id': '',
                 },
-                "reference": "trx_ref"
+                'paymentAgreement': {
+                  'contract': {
+                    'id': '',
+                  },
+                  'id': '',
+                },
               },
-              "interface": {
-                "powered": true,
-                "loader": true,
-                "theme": "light",
-                "cardDirection": "LTR",
-                "colorStyle": "colored",
-                "edges": "curved",
-                "locale": "dynamic"
-              }
+              'invoice': {
+                'id': '',
+              },
+              'merchant': {
+                'id': '1124340',
+              },
+              'features': {
+                'customerCards': {
+                  'saveCard': true,
+                  'autoSaveCard': true,
+                },
+                'alternativeCardInputs': {
+                  'cardScanner': true,
+                  'cardNFC': true,
+                },
+                'acceptanceBadge': true,
+              },
+              'acceptance': {
+                'supportedSchemes': [],
+                'supportedFundSource': [],
+                'supportedPaymentAuthentications': ['3DS'],
+              },
+              'fieldVisibility': {
+                'card': {
+                  'cvv': true,
+                  'cardHolder': true,
+                },
+              },
+              'interface': {
+                'powered': true,
+                'loader': true,
+                'edges': 'flat',
+                'colorStyle': 'colored',
+                'theme': 'light',
+                'cardDirection': 'dynamic',
+                'locale': 'en',
+              },
+              'redirect': {
+                'url': '',
+              },
+              'post': {
+                'url': '',
+              },
             },
             onReady: () {
               setState(() {

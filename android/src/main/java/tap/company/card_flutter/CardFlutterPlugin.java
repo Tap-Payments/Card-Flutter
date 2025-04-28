@@ -147,29 +147,6 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
     private Lifecycle lifecycle;
     private LifeCycleObserver observer;
     // private static final String CHANNEL = "card_flutter";
-
-    /**
-     * Register with
-     *
-     * @param registrar
-     */
-
-    public static void registerWith(PluginRegistry.Registrar registrar) {
-        if (registrar.activity() == null) {
-            // If a background flutter view tries to register the plugin, there will be no activity from the registrar,
-            // we stop the registering process immediately because the SDK requires an activity.
-            return;
-        }
-        Activity activity = registrar.activity();
-        Application application = null;
-        if (registrar.context() != null) {
-            application = (Application) (registrar.context().getApplicationContext());
-        }
-        CardFlutterPlugin plugin = new CardFlutterPlugin();
-        plugin.setup(registrar.messenger(), application, activity, registrar, null);
-    }
-
-
     /**
      * Default constructor for the plugin.
      *
@@ -202,7 +179,6 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
                 pluginBinding.getBinaryMessenger(),
                 (Application) pluginBinding.getApplicationContext(),
                 activityBinding.getActivity(),
-                null,
                 activityBinding);
     }
 
@@ -230,7 +206,6 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
             final BinaryMessenger messenger,
             final Application application,
             final Activity activity,
-            final PluginRegistry.Registrar registrar,
             final ActivityPluginBinding activityBinding) {
         this.activity = activity;
         this.application = application;
@@ -241,18 +216,10 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
         eventChannel.setStreamHandler(this);
 
         observer = new LifeCycleObserver(activity);
-        if (registrar != null) {
-            // V1 embedding setup for activity listeners.
-            application.registerActivityLifecycleCallbacks(observer);
-            registrar.addActivityResultListener(delegate);
-            registrar.addRequestPermissionsResultListener(delegate);
-        } else {
-            // V2 embedding setup for activity listeners.
+        if (activityBinding != null) {
             activityBinding.addActivityResultListener(delegate);
             activityBinding.addRequestPermissionsResultListener(delegate);
-//            lifecycle = FlutterLifecycleAdapter.getActivityLifecycle(activityBinding);
-//            lifecycle.addObserver(observer);
-        }
+        } 
     }
 
 
