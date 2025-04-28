@@ -8,6 +8,9 @@ import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +64,7 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
         this.activity = activity1;
         try {
 
-
+            initializeFirebase(activity1.getApplicationContext());
             HashMap<String, Object> tapCardConfigurations = (HashMap<String, Object>) params.get("configuration");
             String cardNumber = (String) params.get("cardNumber");
             String cardExpiry = (String) params.get("cardExpiry");
@@ -81,6 +84,22 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
         } catch (Exception e) {
 //            pendingResult.error(String.valueOf(500), e.toString(), new Object());
 //            pendingResult = null;
+        }
+    }
+
+    private void initializeFirebase(android.content.Context context) {
+    try {
+            if (FirebaseApp.getApps(context).isEmpty()) {
+                FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setApiKey("AIzaSyDHnW6NQ3bifZsmzGdyVLd2t6f8U1lSqlE")
+                    .setApplicationId("com.example.tapcardwebsdk")
+                    .setProjectId("your-project-id")
+                    .build();
+                FirebaseApp.initializeApp(context, options);
+                System.out.println("Firebase initialized manually");
+            }
+        } catch (Exception e) {
+            System.err.println("Error initializing Firebase: " + e.getMessage());
         }
     }
 
