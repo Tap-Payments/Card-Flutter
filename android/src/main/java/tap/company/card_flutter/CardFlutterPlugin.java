@@ -5,8 +5,7 @@ import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -322,17 +321,7 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
         boolean generateToken = false;
         if (call.method.equals("generateToken")) {
             generateToken = true;
-           if (FirebaseApp.getApps(activity).isEmpty()) {
-               FirebaseOptions options = new FirebaseOptions.Builder()
-                       .setApiKey("AIzaSyDHnW6NQ3bifZsmzGdyVLd2t6f8U1lSqlE")
-                       .setApplicationId("com.example.tapcardwebsdk")
-                       .build();
-
-               Object firebaseApp = FirebaseApp.initializeApp(activity, options);
-           }
-                System.out.println("Firebase initialized successfully in native Android");
             delegate.start(activity, result, args, generateToken, eventSink);
-
             //  delegate.generateTapToken(activity, result, args);
         }
 
