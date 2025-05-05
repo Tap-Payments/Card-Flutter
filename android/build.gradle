@@ -63,7 +63,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.Tap-Payments:Card-Android:1.0.5.2'
+    implementation 'com.github.Tap-Payments:Card-Android:1.0.6'
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-common:21.0.0'
 }

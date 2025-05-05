@@ -1,3 +1,7 @@
+## 1.0.14 05-05-2025
+
+* Fix android crash issue when user move from portrait to landscape mode
+
 ## 1.0.13 21-APR-2025
 
 * Fix android crash issue when using scanner with card reader
