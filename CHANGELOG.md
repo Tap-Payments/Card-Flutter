@@ -1,3 +1,7 @@
+## 1.0.15 02-06-2025
+
+* Fix android NFC 
+
 ## 1.0.14 05-05-2025
 
 * Fix android crash issue when user move from portrait to landscape mode
