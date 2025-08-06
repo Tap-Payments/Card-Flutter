@@ -1,3 +1,7 @@
+## 1.0.16 06-08-2025
+
+* Fix android firebase dependency
+
 ## 1.0.15 02-06-2025
 
 * Fix android NFC 
