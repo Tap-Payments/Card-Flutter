@@ -1,3 +1,7 @@
+## 1.0.17 24-09-2025
+
+* Support android 15
+
 ## 1.0.16 06-08-2025
 
 * Fix android firebase dependency
