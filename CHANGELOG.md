@@ -1,4 +1,4 @@
-## 1.0.18 24-09-2025
+## 1.0.19 24-09-2025
 
 * Support android 15
 
@@ -40,6 +40,8 @@ If you're using ProGuard in your Android project, add the following rules to you
 -keep class com.tap.commondatamodels.** { *; }
 ```
 
+## 1.0.18 24-09-2025
+* Support android 15
 
 ## 1.0.17 24-09-2025
 
