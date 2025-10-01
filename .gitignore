@@ -2,3 +2,5 @@
 example/android/app/.cxx/
 
 .dart_tool/
+
+example/.fvm/

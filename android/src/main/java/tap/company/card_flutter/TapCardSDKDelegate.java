@@ -69,14 +69,20 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
             String cardNumber = (String) params.get("cardNumber");
             String cardExpiry = (String) params.get("cardExpiry");
 
+            // Log the configuration structure for debugging
             System.out.println("Tap Card Configurations " + tapCardConfigurations);
+            if (tapCardConfigurations != null) {
+                logConfigurationStructure(tapCardConfigurations, "");
+            }
 
             if (generateToken) {
                 System.out.println("Coming here for generate token");
                 CardDataConfiguration.INSTANCE.generateToken(tapCardKit);
             } else {
                 assert tapCardConfigurations != null;
-                CardDataConfiguration.INSTANCE.initializeSDK(activity1, tapCardConfigurations, this, tapCardKit, cardNumber, cardExpiry);
+                // Convert to a safer configuration format
+                HashMap<String, Object> safeConfiguration = createSafeConfiguration(tapCardConfigurations);
+                CardDataConfiguration.INSTANCE.initializeSDK(activity1, safeConfiguration, this, tapCardKit, cardNumber, cardExpiry);
                 //  DataConfiguration.INSTANCE.addTapCardStatusDelegate(this);
 
             }
@@ -84,6 +90,86 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
         } catch (Exception e) {
 //            pendingResult.error(String.valueOf(500), e.toString(), new Object());
 //            pendingResult = null;
+        }
+    }
+
+    private void logConfigurationStructure(HashMap<String, Object> config, String prefix) {
+        for (Map.Entry<String, Object> entry : config.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            String logPrefix = prefix + key;
+            
+            if (value == null) {
+                System.out.println(logPrefix + ": null");
+            } else {
+                System.out.println(logPrefix + ": " + value.getClass().getSimpleName() + " = " + value);
+                
+                // If it's a nested HashMap, log its structure too
+                if (value instanceof HashMap) {
+                    logConfigurationStructure((HashMap<String, Object>) value, logPrefix + ".");
+                } else if (value instanceof List) {
+                    List<?> list = (List<?>) value;
+                    System.out.println(logPrefix + " (List with " + list.size() + " items)");
+                    for (int i = 0; i < list.size(); i++) {
+                        Object item = list.get(i);
+                        if (item != null) {
+                            System.out.println(logPrefix + "[" + i + "]: " + item.getClass().getSimpleName() + " = " + item);
+                            if (item instanceof HashMap) {
+                                logConfigurationStructure((HashMap<String, Object>) item, logPrefix + "[" + i + "].");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private HashMap<String, Object> createSafeConfiguration(HashMap<String, Object> originalConfig) {
+        HashMap<String, Object> safeConfig = new HashMap<>();
+        
+        for (Map.Entry<String, Object> entry : originalConfig.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            
+            // Recursively convert nested structures
+            Object safeValue = convertToSafeType(value);
+            safeConfig.put(key, safeValue);
+        }
+        
+        return safeConfig;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private Object convertToSafeType(Object value) {
+        if (value == null) {
+            return null;
+        }
+        
+        // Handle different data types
+        if (value instanceof String || value instanceof Number || value instanceof Boolean) {
+            return value;
+        } else if (value instanceof Map) {
+            // Convert Map to HashMap<String, Object>
+            Map<?, ?> mapValue = (Map<?, ?>) value;
+            HashMap<String, Object> safeMap = new HashMap<>();
+            for (Map.Entry<?, ?> mapEntry : mapValue.entrySet()) {
+                if (mapEntry.getKey() instanceof String) {
+                    safeMap.put((String) mapEntry.getKey(), convertToSafeType(mapEntry.getValue()));
+                }
+            }
+            return safeMap;
+        } else if (value instanceof List) {
+            // Convert List to ArrayList
+            List<?> listValue = (List<?>) value;
+            ArrayList<Object> safeList = new ArrayList<>();
+            for (Object item : listValue) {
+                safeList.add(convertToSafeType(item));
+            }
+            return safeList;
+        } else {
+            // For unknown types, convert to string as fallback
+            System.out.println("Unknown type encountered: " + value.getClass().getName() + ", converting to string: " + value.toString());
+            return value.toString();
         }
     }
 
