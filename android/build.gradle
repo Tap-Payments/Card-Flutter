@@ -63,7 +63,7 @@ android {
 }
 
 dependencies {
-    implementation('com.github.barakatech:baraka-tapPayments-android:v1.1.21') {
+    implementation('com.github.barakatech:baraka-tapPayments-android:v1.1.22') {
       exclude group: 'com.google.firebase', module: 'firebase-iid'
     }
     implementation 'com.google.firebase:firebase-core:+'
