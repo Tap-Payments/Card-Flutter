@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 class TapCardViewWidget extends StatefulWidget {
@@ -289,11 +292,27 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
 
     Widget platformView;
     if (Theme.of(context).platform == TargetPlatform.android) {
-      platformView = AndroidView(
-        viewType: "plugin/tap_card_sdk",
-        creationParams: widget.sdkConfiguration,
-        creationParamsCodec: const StandardMessageCodec(),
-        layoutDirection: TextDirection.ltr,
+      platformView = PlatformViewLink(
+        viewType: 'plugin/tap_card_sdk',
+        surfaceFactory: (context, controller) {
+          return AndroidViewSurface(
+            controller: controller as AndroidViewController,
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+          );
+        },
+        onCreatePlatformView: (params) {
+          return PlatformViewsService.initExpensiveAndroidView(
+            id: params.id,
+            viewType: 'plugin/tap_card_sdk',
+            layoutDirection: TextDirection.ltr,
+            creationParams: widget.sdkConfiguration,
+            creationParamsCodec: const StandardMessageCodec(),
+            onFocus: () => params.onFocusChanged(true),
+          )
+            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+            ..create();
+        },
       );
     } else {
       platformView = UiKitView(

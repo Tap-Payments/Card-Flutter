@@ -1,3 +1,11 @@
+## 1.0.21 23-06-2026
+
+* Security: upgrade outdated Android build components flagged by security review.
+  * Android Gradle Plugin 7.3.0 → 8.13.2 (plugin) and example 8.7.0 → 8.13.2
+  * Gradle wrapper 8.4/8.9 → 8.14.3
+  * Bump plugin compileSdk 34 → 35
+* Note: AGP 8.13.x requires Gradle 8.13+ and JDK 17+.
+
 ## 1.0.20 07-01-2026
 
 * Added shimmer loading effect for improved UX during SDK initialization
