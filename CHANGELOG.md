@@ -1,3 +1,14 @@
+## 1.0.22 24-06-2026
+
+* Fix Android build failure on AGP 9.x / Gradle 9.6+:
+  * Remove unsupported `jcenter()` repositories (caused "Could not find method jcenter()").
+  * Stop pinning the Android Gradle Plugin in the plugin's `buildscript`; AGP is now
+    provided by the consuming app, so the plugin works with AGP 8.x and 9.x. The
+    previously pinned AGP 8.13.2 is incompatible with Gradle 9.6+ and broke AGP 9 clients.
+  * Use `compileSdk` / `minSdk` (the `*Version` forms are removed in AGP 9).
+  * Set `namespace` unconditionally (required since AGP 8).
+  * Verified against AGP 8.13.2/Gradle 8.14.3 and AGP 9.2.1/Gradle 9.6.1.
+
 ## 1.0.21 23-06-2026
 
 * Security: upgrade outdated Android build components flagged by security review.

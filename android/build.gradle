@@ -1,26 +1,15 @@
 group 'tap.company.card_flutter'
 version '1.0'
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-        jcenter()
-        maven { url 'https://jitpack.io' }
-
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.13.2'
-        classpath 'com.google.gms:google-services:4.3.15'
-    }
-}
+// NOTE: This plugin intentionally does NOT pin its own Android Gradle Plugin
+// version. AGP is provided by the consuming app, so the plugin works with
+// whatever AGP the app uses (8.x or 9.x). Pinning AGP here previously forced
+// AGP 8.13.2, which is incompatible with Gradle 9.6+ and broke AGP 9 clients.
 
 rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
         maven { url 'https://jitpack.io' }
 
     }
@@ -31,11 +20,9 @@ apply plugin: 'com.android.library'
 
 
 android {
-    if (project.android.hasProperty("namespace")) {
-        namespace 'tap.company.card_flutter'
-    }
+    namespace 'tap.company.card_flutter'
 
-    compileSdkVersion 35
+    compileSdk 35
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -43,7 +30,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 24
+        minSdk 24
     }
 
     dependencies {
