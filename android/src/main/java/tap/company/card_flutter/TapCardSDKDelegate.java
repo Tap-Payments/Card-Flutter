@@ -47,6 +47,8 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
 
     boolean onHeightChangeCallbackTriggered = true;
 
+    private int platformKitWaitAttempts = 0;
+
     private Handler handler = new Handler(Looper.getMainLooper());
 
 
@@ -55,6 +57,11 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
         this.dataConfiguration = CardDataConfiguration.INSTANCE;
         this.tapCardKit = new TapCardKit(_activity.getApplicationContext());
 
+    }
+
+    private TapCardKit getActiveTapCardKit() {
+        TapCardKit platformKit = CardFlutterPlugin.getPlatformTapCardKit();
+        return platformKit != null ? platformKit : tapCardKit;
     }
 
 
@@ -77,12 +84,28 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
 
             if (generateToken) {
                 System.out.println("Coming here for generate token");
-                CardDataConfiguration.INSTANCE.generateToken(tapCardKit);
+                CardDataConfiguration.INSTANCE.generateToken(getActiveTapCardKit());
             } else {
+                if (CardFlutterPlugin.getPlatformTapCardKit() == null && platformKitWaitAttempts < 40) {
+                    platformKitWaitAttempts++;
+                    handler.postDelayed(
+                            () -> start(activity1, callback, params, false, event),
+                            50
+                    );
+                    return;
+                }
+                platformKitWaitAttempts = 0;
                 assert tapCardConfigurations != null;
                 // Convert to a safer configuration format
                 HashMap<String, Object> safeConfiguration = createSafeConfiguration(tapCardConfigurations);
-                CardDataConfiguration.INSTANCE.initializeSDK(activity1, safeConfiguration, this, tapCardKit, cardNumber, cardExpiry);
+                CardDataConfiguration.INSTANCE.initializeSDK(
+                        activity1,
+                        safeConfiguration,
+                        this,
+                        getActiveTapCardKit(),
+                        cardNumber,
+                        cardExpiry
+                );
                 //  DataConfiguration.INSTANCE.addTapCardStatusDelegate(this);
 
             }
@@ -287,6 +310,9 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                                 HashMap<String, Object> resultData = new HashMap<>();
                                 resultData.put("onReady", "On Ready Callback Is Executed");
                                 eventSink.success(resultData);
+                                if (CardFlutterPlugin.isAutoFocusEnabled()) {
+                                    CardFocusHelper.scheduleAutoFocus(activity, 500, 12);
+                                }
 
                             } catch (IllegalStateException exception) {
                                 // Output expected IllegalStateException.

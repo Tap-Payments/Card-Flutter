@@ -17,6 +17,7 @@ class TapCardViewWidget extends StatefulWidget {
   final Map<String, dynamic> sdkConfiguration;
   final String? cardNumber, cardExpiry;
   final bool showLoading;
+  final bool autoFocus;
 
   const TapCardViewWidget({
     super.key,
@@ -33,6 +34,7 @@ class TapCardViewWidget extends StatefulWidget {
     required this.generateToken,
     required this.sdkConfiguration,
     this.showLoading = false,
+    this.autoFocus = true,
   });
 
   @override
@@ -60,9 +62,17 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
   late Animation<double> _shimmerAnimation;
   Timer? _heightDebounceTimer;
   double? _pendingHeight;
+  final FocusNode _focusNode = FocusNode();
+  bool _autoFocusRequested = false;
+  Timer? _autoFocusTimer;
+  int _autoFocusAttempts = 0;
+  static const int _maxAutoFocusAttempts = 12;
+  StreamSubscription<dynamic>? _eventSubscription;
 
   void streamTimeFromNative() {
-    _eventChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
+    _eventSubscription?.cancel();
+    _eventSubscription =
+        _eventChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
   }
 
   void _onEvent(dynamic event) {
@@ -87,7 +97,10 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
       curve: Curves.linear,
     ));
 
-    Future.delayed(const Duration(seconds: 0), () {
+    Future.delayed(const Duration(seconds: 0), () async {
+      try {
+        await _channel.invokeMethod('setAutoFocus', {'enabled': widget.autoFocus});
+      } catch (_) {}
       streamTimeFromNative();
       startTapCardSDK();
     });
@@ -187,6 +200,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
       });
       onReadyFunction = widget.onReady;
       onReadyFunction!();
+      _requestAutoFocusIfNeeded();
     }
 
     if (result.containsKey("onSuccess")) {
@@ -214,10 +228,61 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
   double height = 95;
   bool isHeightSet = false;
 
+  Future<bool> _focusCardNumberField() async {
+    try {
+      final result = await _channel.invokeMethod('focusCardNumber');
+      if (result is Map && result['focused'] == true) {
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  void _requestAutoFocusIfNeeded() {
+    if (!widget.autoFocus || _autoFocusRequested) {
+      return;
+    }
+    _autoFocusRequested = true;
+    _autoFocusAttempts = 0;
+    _scheduleAutoFocusAttempt(initialDelayMs: 600);
+  }
+
+  void _scheduleAutoFocusAttempt({required int initialDelayMs}) {
+    _autoFocusTimer?.cancel();
+    _autoFocusTimer = Timer(Duration(milliseconds: initialDelayMs), () async {
+      if (!mounted) {
+        return;
+      }
+      _focusNode.requestFocus();
+      final focused = await _focusCardNumberField();
+      if (focused || _autoFocusAttempts >= _maxAutoFocusAttempts) {
+        return;
+      }
+      _autoFocusAttempts += 1;
+      _scheduleAutoFocusAttempt(initialDelayMs: 300);
+    });
+  }
+
+  void _dismissKeyboard() {
+    _focusNode.unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
+    SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
+    try {
+      _channel.invokeMethod('dismissKeyboard');
+    } catch (_) {}
+  }
+
   @override
   void dispose() {
+    _eventSubscription?.cancel();
+    _autoFocusTimer?.cancel();
+    _dismissKeyboard();
+    try {
+      _channel.invokeMethod('disposeCardView');
+    } catch (_) {}
     _shimmerController.dispose();
     _heightDebounceTimer?.cancel();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -323,25 +388,28 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
       );
     }
 
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOutCubicEmphasized,
-      child: SizedBox(
-        height: height,
-        child: Stack(
-          children: [
-            platformView,
-            if (widget.showLoading)
-              IgnorePointer(
-                ignoring: sdkStarted,
-                child: AnimatedOpacity(
-                  opacity: sdkStarted ? 0.0 : 1.0,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOutQuart,
-                  child: _buildShimmerOverlay(context),
+    return Focus(
+      focusNode: _focusNode,
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOutCubicEmphasized,
+        child: SizedBox(
+          height: height,
+          child: Stack(
+            children: [
+              platformView,
+              if (widget.showLoading)
+                IgnorePointer(
+                  ignoring: sdkStarted,
+                  child: AnimatedOpacity(
+                    opacity: sdkStarted ? 0.0 : 1.0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOutQuart,
+                    child: _buildShimmerOverlay(context),
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
