@@ -41,6 +41,7 @@ class FLNativeView: NSObject, FlutterPlatformView {
     private var _view: UIView
     private var _args: [String:Any]?
     private var cardDelegate: TapCardViewDelegate
+    private var tapCardView: TapCardView
 
 
     init(
@@ -53,22 +54,37 @@ class FLNativeView: NSObject, FlutterPlatformView {
 
     ) {
         self.cardDelegate = cardDelegate
+        self.tapCardView = tapCardView
         _view = UIView()
         self._args = args as? [String:Any]
         super.init()
         createNativeView(view: _view, tapCardView: tapCardView)
     }
 
+    deinit {
+        DispatchQueue.main.async { [tapCardView] in
+            CardWebViewFocus.cancelPendingFocus()
+            tapCardView.endEditing(true)
+            if let webView = CardWebViewFocus.webView(in: tapCardView) {
+                webView.endEditing(true)
+                webView.resignFirstResponder()
+            }
+            tapCardView.isHidden = true
+            tapCardView.removeFromSuperview()
+            if let webView = CardWebViewFocus.webView(in: tapCardView) {
+                webView.load(URLRequest(url: URL(string: "about:blank")!))
+            }
+        }
+    }
+
     func view() -> UIView {
         return _view
     }
 
-   // var tapCardView = TapCardView.init()
-
     func createNativeView(view _view: UIView,tapCardView: TapCardView){
         _view.backgroundColor = UIColor.clear
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)){
-           // self.tapCardView = TapCardView(frame: .init(x: 0, y: 0, width: self._view.frame.width, height: self._view.frame.height))
+            tapCardView.isHidden = false
             self._view.addSubview(tapCardView)
             self._view.bringSubviewToFront(tapCardView)
             tapCardView.translatesAutoresizingMaskIntoConstraints = false

@@ -1,3 +1,12 @@
+## 1.0.23 06-09-2026
+
+* Add `autoFocus` to `TapCardViewWidget` (default `true`) so the card number field
+  focuses and the keyboard opens when the SDK is ready (Dart + Android + iOS).
+* Add `focusCardNumber`, `setAutoFocus`, `dismissKeyboard`, and `disposeCardView`
+  method-channel handlers for native WebView focus and cleanup.
+* Fix the native card WebView lingering after the hosting route is popped, and
+  dismiss the keyboard when the widget is disposed.
+
 ## 1.0.22 24-06-2026
 
 * Fix Android build failure on AGP 9.x / Gradle 9.6+:

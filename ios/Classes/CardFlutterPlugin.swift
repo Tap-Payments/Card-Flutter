@@ -17,6 +17,8 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
     
     var result: FlutterResult?
     var tapCardView: TapCardView = .init()
+    private static var autoFocusEnabled = true
+
   public static func register(with registrar: FlutterPluginRegistrar) {
       let instance = CardFlutterPlugin()
       let factory = FLNativeViewFactory(messenger: registrar.messenger(),cardDelegate: instance, tapCardView: instance.tapCardView)
@@ -40,6 +42,27 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
         self.tapCardView.generateTapToken()
         
         break
+    case "focusCardNumber":
+        self.focusCardNumberField { focused in
+            result(["focused": focused])
+        }
+        break
+    case "setAutoFocus":
+        if let args = call.arguments as? [String: Any] {
+            CardFlutterPlugin.autoFocusEnabled = args["enabled"] as? Bool ?? true
+        } else {
+            CardFlutterPlugin.autoFocusEnabled = true
+        }
+        result(nil)
+        break
+    case "disposeCardView":
+        disposeCardView()
+        result(nil)
+        break
+    case "dismissKeyboard":
+        dismissKeyboard()
+        result(nil)
+        break
     default:
       result(FlutterMethodNotImplemented)
     }
@@ -47,6 +70,9 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
     
     public func onReady() {
         self.eventSink?(["onReady":"OnReady Callback Executed"])
+        if CardFlutterPlugin.autoFocusEnabled {
+            CardWebViewFocus.scheduleAutoFocus(on: self.tapCardView)
+        }
     }
     
     public func onFocus() {
@@ -80,6 +106,40 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
     
     public func onChangeSaveCard(enabled: Bool) {
         self.eventSink?(["onChangeSaveCard":"\(enabled)"])
+    }
+
+    private func focusCardNumberField(completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async {
+            CardWebViewFocus.focusCardNumber(in: self.tapCardView, completion: completion)
+        }
+    }
+
+    private func dismissKeyboard() {
+        DispatchQueue.main.async {
+            CardWebViewFocus.cancelPendingFocus()
+            self.tapCardView.endEditing(true)
+            if let webView = CardWebViewFocus.webView(in: self.tapCardView) {
+                webView.endEditing(true)
+                webView.resignFirstResponder()
+            }
+            UIApplication.shared.sendAction(
+                #selector(UIResponder.resignFirstResponder),
+                to: nil,
+                from: nil,
+                for: nil
+            )
+        }
+    }
+
+    private func disposeCardView() {
+        DispatchQueue.main.async {
+            self.dismissKeyboard()
+            self.tapCardView.isHidden = true
+            self.tapCardView.removeFromSuperview()
+            if let webView = CardWebViewFocus.webView(in: self.tapCardView) {
+                webView.load(URLRequest(url: URL(string: "about:blank")!))
+            }
+        }
     }
     
     

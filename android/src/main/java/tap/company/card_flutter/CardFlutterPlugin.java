@@ -146,7 +146,31 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
     // This is null when not using v2 embedding;
     private Lifecycle lifecycle;
     private LifeCycleObserver observer;
+    private static boolean autoFocusEnabled = true;
+    private static TapCardKit platformTapCardKit;
     // private static final String CHANNEL = "card_flutter";
+
+    static void registerPlatformTapCardKit(TapCardKit tapCardKit) {
+        platformTapCardKit = tapCardKit;
+    }
+
+    static void unregisterPlatformTapCardKit(TapCardKit tapCardKit) {
+        if (platformTapCardKit == tapCardKit) {
+            platformTapCardKit = null;
+        }
+    }
+
+    static TapCardKit getPlatformTapCardKit() {
+        return platformTapCardKit;
+    }
+
+    static boolean isAutoFocusEnabled() {
+        return autoFocusEnabled;
+    }
+
+    static void setAutoFocusEnabled(boolean enabled) {
+        autoFocusEnabled = enabled;
+    }
     /**
      * Default constructor for the plugin.
      *
@@ -328,6 +352,24 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
         if (call.method.equals("start")) {
             delegate.start(activity, result, args, generateToken, eventSink);
 
+        } else if (call.method.equals("focusCardNumber")) {
+            boolean focused = TapCardKitViewManager.focusCardNumber(activity);
+            HashMap<String, Object> response = new HashMap<>();
+            response.put("focused", focused);
+            result.success(response);
+        } else if (call.method.equals("setAutoFocus")) {
+            if (args != null && args.containsKey("enabled")) {
+                setAutoFocusEnabled(Boolean.TRUE.equals(args.get("enabled")));
+            } else {
+                setAutoFocusEnabled(true);
+            }
+            result.success(null);
+        } else if (call.method.equals("disposeCardView")) {
+            CardViewCleanup.disposeCardView(activity);
+            result.success(null);
+        } else if (call.method.equals("dismissKeyboard")) {
+            CardViewCleanup.dismissKeyboard(activity);
+            result.success(null);
         } else {
             delegate.pendingResult = result;
             delegate.eventSink = eventSink;

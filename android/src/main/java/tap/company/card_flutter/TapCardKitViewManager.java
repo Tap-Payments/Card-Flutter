@@ -1,5 +1,6 @@
 package tap.company.card_flutter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import java.util.Map;
 
 class TapCardKitViewManager implements PlatformView {
 
-
     private TapCardKit tapCardKit;
     private View view;
 
@@ -29,8 +29,12 @@ class TapCardKitViewManager implements PlatformView {
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
         tapCardKit = view.findViewById(R.id.tapCardForm);
+        CardFlutterPlugin.registerPlatformTapCardKit(tapCardKit);
     }
 
+    static boolean focusCardNumber(@Nullable Activity activity) {
+        return CardFocusHelper.focusCardNumber(activity);
+    }
 
     @NonNull
     @Override
@@ -40,6 +44,18 @@ class TapCardKitViewManager implements PlatformView {
 
     @Override
     public void dispose() {
+        CardFlutterPlugin.unregisterPlatformTapCardKit(tapCardKit);
+        Activity activity = null;
+        if (view != null && view.getContext() instanceof Activity) {
+            activity = (Activity) view.getContext();
+        }
+        CardViewCleanup.disposeCardView(activity);
+        if (view != null) {
+            view.setVisibility(View.GONE);
+        }
+        if (tapCardKit != null) {
+            tapCardKit.setVisibility(View.GONE);
+        }
     }
 
 }
