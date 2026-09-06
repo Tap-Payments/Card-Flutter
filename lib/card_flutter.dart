@@ -199,7 +199,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
         sdkStarted = true;
       });
       onReadyFunction = widget.onReady;
-      onReadyFunction!();
+      onReadyFunction?.call();
       _requestAutoFocusIfNeeded();
     }
 
@@ -267,9 +267,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
     _focusNode.unfocus();
     FocusManager.instance.primaryFocus?.unfocus();
     SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
-    try {
-      _channel.invokeMethod('dismissKeyboard');
-    } catch (_) {}
+    _channel.invokeMethod('dismissKeyboard').catchError((_) {});
   }
 
   @override
@@ -277,9 +275,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
     _eventSubscription?.cancel();
     _autoFocusTimer?.cancel();
     _dismissKeyboard();
-    try {
-      _channel.invokeMethod('disposeCardView');
-    } catch (_) {}
+    _channel.invokeMethod('disposeCardView').catchError((_) {});
     _shimmerController.dispose();
     _heightDebounceTimer?.cancel();
     _focusNode.dispose();

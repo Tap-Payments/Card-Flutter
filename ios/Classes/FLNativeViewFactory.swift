@@ -1,6 +1,5 @@
 import Flutter
 import UIKit
-import WebKit
 import Card_iOS
 
 class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
@@ -64,14 +63,15 @@ class FLNativeView: NSObject, FlutterPlatformView {
 
     deinit {
         DispatchQueue.main.async { [tapCardView] in
+            CardWebViewFocus.cancelPendingFocus()
             tapCardView.endEditing(true)
-            if let webView = findWebView(in: tapCardView) {
+            if let webView = CardWebViewFocus.webView(in: tapCardView) {
                 webView.endEditing(true)
                 webView.resignFirstResponder()
             }
             tapCardView.isHidden = true
             tapCardView.removeFromSuperview()
-            if let webView = findWebView(in: tapCardView) {
+            if let webView = CardWebViewFocus.webView(in: tapCardView) {
                 webView.load(URLRequest(url: URL(string: "about:blank")!))
             }
         }

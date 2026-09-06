@@ -1,6 +1,5 @@
 import Flutter
 import UIKit
-import WebKit
 import Card_iOS
 
 public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,FlutterStreamHandler {
@@ -21,7 +20,6 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
     private static var autoFocusEnabled = true
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-      WKWebView.allowDisplayingKeyboardWithoutUserAction()
       let instance = CardFlutterPlugin()
       let factory = FLNativeViewFactory(messenger: registrar.messenger(),cardDelegate: instance, tapCardView: instance.tapCardView)
       registrar.register(factory, withId: "plugin/tap_card_sdk")
@@ -73,7 +71,7 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
     public func onReady() {
         self.eventSink?(["onReady":"OnReady Callback Executed"])
         if CardFlutterPlugin.autoFocusEnabled {
-            scheduleCardNumberAutoFocus(on: self.tapCardView)
+            CardWebViewFocus.scheduleAutoFocus(on: self.tapCardView)
         }
     }
     
@@ -112,19 +110,15 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
 
     private func focusCardNumberField(completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async {
-            guard let webView = findWebView(in: self.tapCardView) else {
-                completion(false)
-                return
-            }
-            webView.becomeFirstResponder()
-            webView.focusCardNumberInput(completion: completion)
+            CardWebViewFocus.focusCardNumber(in: self.tapCardView, completion: completion)
         }
     }
 
     private func dismissKeyboard() {
         DispatchQueue.main.async {
+            CardWebViewFocus.cancelPendingFocus()
             self.tapCardView.endEditing(true)
-            if let webView = findWebView(in: self.tapCardView) {
+            if let webView = CardWebViewFocus.webView(in: self.tapCardView) {
                 webView.endEditing(true)
                 webView.resignFirstResponder()
             }
@@ -142,7 +136,7 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
             self.dismissKeyboard()
             self.tapCardView.isHidden = true
             self.tapCardView.removeFromSuperview()
-            if let webView = findWebView(in: self.tapCardView) {
+            if let webView = CardWebViewFocus.webView(in: self.tapCardView) {
                 webView.load(URLRequest(url: URL(string: "about:blank")!))
             }
         }
