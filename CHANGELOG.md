@@ -1,3 +1,13 @@
+## 1.0.23 04-10-2026
+
+* Update Card-iOS 1.0.6 → 1.0.8:
+  * Drops the SwiftyRSA dependency, whose exported Objective-C class names could clash with
+    classes in the host app. Header encryption now uses the Security framework.
+  * Drops the SnapKit dependency.
+  * Builds on Xcode 27, which only supports iOS 15+.
+* **Breaking:** the minimum iOS version is now **15.0** (was 13.0). Apps must set
+  `platform :ios, '15.0'` (or higher) in their `ios/Podfile`.
+
 ## 1.0.22 24-06-2026
 
 * Fix Android build failure on AGP 9.x / Gradle 9.6+:
