@@ -12,8 +12,8 @@
   IP lookup before loading the page, reuses the config from the last launch, and no longer loads the
   page twice on the first launch after install.
 * iOS: start the card SDK as soon as the card view is created, instead of 300 ms later.
-* Android: the card form now shows the `cardNumber` and `cardExpiry` passed to `TapCardViewWidget`;
-  they were set on a form that was never shown.
+* The card form now shows the `cardNumber` and `cardExpiry` passed to `TapCardViewWidget`. On
+  Android they were set on a form that was never shown; on iOS they were never passed to Card-iOS.
 * `TapCardViewWidget` stops listening to card events when it is disposed.
 
 ## 1.0.23 04-10-2026

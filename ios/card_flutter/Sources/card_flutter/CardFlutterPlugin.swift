@@ -19,8 +19,8 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
     var tapCardView: TapCardView = .init()
     
     //MARK: - Preload state
-    /// The configuration a preload started with, until a card view claims it or it is dropped
-    private var preloadedConfiguration: NSDictionary?
+    /// The arguments a preload started with, until a card view claims it or it is dropped
+    private var preloadedArguments: NSDictionary?
     /// True once a card view took over the preloaded form
     private var preloadClaimed = false
     /// True once the widget asked to start after the preload began, so it is listening to events
@@ -55,11 +55,11 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
         break
     case "preload":
         guard let args = call.arguments as? [String: Any],
-              let configuration = args["configuration"] as? [String: Any] else {
+              args["configuration"] is [String: Any] else {
             result(FlutterError(code: "invalid_arguments", message: "preload needs a configuration", details: nil))
             return
         }
-        preload(configuration: configuration)
+        preload(arguments: args)
         result(nil)
     case "cancelPreload":
         dropPreload()
@@ -77,10 +77,11 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
     //MARK: - Preload
     
     /// Starts loading the card form before the widget is shown.
-    /// iOS does not prefill the card number in either path, so only the configuration is matched.
-    private func preload(configuration: [String: Any]) {
+    /// `arguments` holds "configuration", "cardNumber" and "cardExpiry"; a card view only
+    /// reuses the preload when all three are equal.
+    private func preload(arguments: [String: Any]) {
         dropPreload()
-        preloadedConfiguration = NSDictionary(dictionary: configuration)
+        preloadedArguments = NSDictionary(dictionary: arguments)
         preloadClaimed = false
         startRequested = false
         isBufferingEvents = true
@@ -102,15 +103,21 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
             ])
             offscreenHost = host
         }
-        tapCardView.initTapCardSDK(configDict: configuration, delegate: self, presentScannerIn: window?.rootViewController)
+        tapCardView.initTapCardSDK(
+            configDict: arguments["configuration"] as? [String: Any] ?? [:],
+            delegate: self,
+            presentScannerIn: window?.rootViewController,
+            cardNumber: arguments["cardNumber"] as? String ?? "",
+            cardExpiry: arguments["cardExpiry"] as? String ?? ""
+        )
     }
     
     /// Called by a new card view. Returns true when it should show the preloaded form as is,
-    /// false when it has to start the SDK itself (no preload, or one with another configuration).
-    func claimPreload(configuration: [String: Any]?) -> Bool {
-        guard let preloadedConfiguration = preloadedConfiguration, !preloadClaimed else { return false }
-        guard let configuration = configuration,
-              preloadedConfiguration.isEqual(to: configuration) else {
+    /// false when it has to start the SDK itself (no preload, or one with other values).
+    func claimPreload(arguments: [String: Any]?) -> Bool {
+        guard let preloadedArguments = preloadedArguments, !preloadClaimed else { return false }
+        guard let arguments = arguments,
+              preloadedArguments.isEqual(to: arguments) else {
             dropPreload()
             return false
         }
@@ -131,7 +138,7 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
             tapCardView.removeFromSuperview()
         }
         removeOffscreenHost()
-        preloadedConfiguration = nil
+        preloadedArguments = nil
         preloadClaimed = false
         isBufferingEvents = false
         bufferedEvents = []
@@ -143,7 +150,7 @@ public class CardFlutterPlugin: NSObject, FlutterPlugin, TapCardViewDelegate,Flu
         let events = bufferedEvents
         bufferedEvents = []
         isBufferingEvents = false
-        preloadedConfiguration = nil
+        preloadedArguments = nil
         preloadClaimed = false
         events.forEach { eventSink($0) }
     }

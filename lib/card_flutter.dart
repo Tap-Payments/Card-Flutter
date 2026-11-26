@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 /// and its script). Call [preload] on an earlier screen, for example the screen
 /// where the payer picks the amount, with the same values you will pass to
 /// [TapCardViewWidget]. When the widget is then built with an equal
-/// `sdkConfiguration` (and, on Android, equal `cardNumber` and `cardExpiry`), it
+/// `sdkConfiguration`, `cardNumber` and `cardExpiry`, it
 /// shows the preloaded form instead of starting a new load, and `onReady` fires
 /// as soon as the form is ready, right away if it already is.
 ///
@@ -365,7 +365,11 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
     } else {
       platformView = UiKitView(
         viewType: "plugin/tap_card_sdk",
-        creationParams: widget.sdkConfiguration,
+        creationParams: {
+          "configuration": widget.sdkConfiguration,
+          "cardNumber": widget.cardNumber ?? "",
+          "cardExpiry": widget.cardExpiry ?? "",
+        },
         layoutDirection: TextDirection.ltr,
         creationParamsCodec: const StandardMessageCodec(),
       );

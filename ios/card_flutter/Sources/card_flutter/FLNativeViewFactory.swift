@@ -78,11 +78,17 @@ class FLNativeView: NSObject, FlutterPlatformView {
             tapCardView.trailingAnchor.constraint(equalTo: _view.trailingAnchor, constant: 0),
             tapCardView.centerYAnchor.constraint(equalTo: _view.centerYAnchor)
         ])
-        if cardPlugin.claimPreload(configuration: _args) {
+        // _args holds "configuration", "cardNumber" and "cardExpiry", like the preload call.
+        if cardPlugin.claimPreload(arguments: _args) {
             // Loaded (or loading) already by TapCardSDK.preload: moving it here is all it takes.
             cardPlugin.removeOffscreenHost()
         } else {
-            tapCardView.initTapCardSDK(configDict: _args ?? [:], delegate: cardPlugin)
+            tapCardView.initTapCardSDK(
+                configDict: _args?["configuration"] as? [String: Any] ?? [:],
+                delegate: cardPlugin,
+                cardNumber: _args?["cardNumber"] as? String ?? "",
+                cardExpiry: _args?["cardExpiry"] as? String ?? ""
+            )
         }
     }
 }
