@@ -270,6 +270,24 @@ State<CardViewScreen> createState() => _CardViewScreenState(); }
 
 Following the above code samples, once the TapCardViewWidget now has a valid input, you will be able to start the tokenization process by changing the stateful variable `generateToken` to true as we declared above, which you can find by following  [Step 5 - Tokenize the card](https://developers.tap.company/docs/flutter-card-sdk#step-5-tokenize-the-card).
 
+### Preload the card form
+
+Loading the card form takes a few seconds. To have it ready the moment your payment screen opens, preload it from an earlier screen, for example where the payer picks the amount, with the same values you will pass to `TapCardViewWidget`:
+
+```dart
+TapCardSDK.preload(
+  sdkConfiguration: cardConfiguration, // the same map you pass to TapCardViewWidget
+  cardNumber: cardNumber,              // optional, the same as the widget's
+  cardExpiry: cardExpiry,              // optional, the same as the widget's
+);
+```
+
+When `TapCardViewWidget` is then built with an equal `sdkConfiguration` (and, on Android, equal `cardNumber` and `cardExpiry`), it shows the preloaded form and `onReady` fires as soon as the form is ready, right away if it already is. If the values differ, for example because the amount changed, the preload is dropped and the widget loads the form as usual.
+
+- There is one card form per app: preload while no `TapCardViewWidget` is on screen. On Android, a preload asked for while a card is still on screen starts once that card is gone.
+- Calling `preload` again replaces the previous preload. Call `TapCardSDK.cancelPreload()` to drop a preload that will not be used.
+- A preloaded form is used once. To preload for the next payment, call `preload` again after the payment screen closes.
+
 ## Advanced Integration
 
 [](https://developers.tap.company/docs/card-sdk-flutter#advanced-integration)

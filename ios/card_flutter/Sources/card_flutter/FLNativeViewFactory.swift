@@ -5,13 +5,13 @@ import Card_iOS
 class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
     private var messenger: FlutterBinaryMessenger
 
-    private var cardDelegate: TapCardViewDelegate
+    private var cardPlugin: CardFlutterPlugin
     
     private var tapCardView: TapCardView
 
-    init(messenger: FlutterBinaryMessenger,cardDelegate:TapCardViewDelegate, tapCardView: TapCardView) {
+    init(messenger: FlutterBinaryMessenger,cardPlugin: CardFlutterPlugin, tapCardView: TapCardView) {
         self.messenger = messenger
-        self.cardDelegate = cardDelegate
+        self.cardPlugin = cardPlugin
         self.tapCardView = tapCardView
         super.init()
     }
@@ -26,7 +26,7 @@ class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
             viewIdentifier: viewId,
             arguments: args,
             binaryMessenger: messenger,
-            cardDelegate: cardDelegate,
+            cardPlugin: cardPlugin,
             tapCardView: tapCardView
         )
     }
@@ -40,7 +40,7 @@ class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
 class FLNativeView: NSObject, FlutterPlatformView {
     private var _view: UIView
     private var _args: [String:Any]?
-    private var cardDelegate: TapCardViewDelegate
+    private var cardPlugin: CardFlutterPlugin
 
 
     init(
@@ -48,11 +48,11 @@ class FLNativeView: NSObject, FlutterPlatformView {
         viewIdentifier viewId: Int64,
         arguments args: Any?,
         binaryMessenger messenger: FlutterBinaryMessenger?,
-        cardDelegate: TapCardViewDelegate,
+        cardPlugin: CardFlutterPlugin,
         tapCardView: TapCardView
 
     ) {
-        self.cardDelegate = cardDelegate
+        self.cardPlugin = cardPlugin
         _view = UIView()
         self._args = args as? [String:Any]
         super.init()
@@ -78,6 +78,11 @@ class FLNativeView: NSObject, FlutterPlatformView {
             tapCardView.trailingAnchor.constraint(equalTo: _view.trailingAnchor, constant: 0),
             tapCardView.centerYAnchor.constraint(equalTo: _view.centerYAnchor)
         ])
-        tapCardView.initTapCardSDK(configDict: _args ?? [:], delegate: cardDelegate)
+        if cardPlugin.claimPreload(configuration: _args) {
+            // Loaded (or loading) already by TapCardSDK.preload: moving it here is all it takes.
+            cardPlugin.removeOffscreenHost()
+        } else {
+            tapCardView.initTapCardSDK(configDict: _args ?? [:], delegate: cardPlugin)
+        }
     }
 }
