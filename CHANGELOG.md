@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.24 26-11-2026
 
 * Add `TapCardSDK.preload` and `TapCardSDK.cancelPreload`: load the card form ahead of time, so
   `TapCardViewWidget` shows it ready as soon as it is built. See "Preload the card form" in the README.
