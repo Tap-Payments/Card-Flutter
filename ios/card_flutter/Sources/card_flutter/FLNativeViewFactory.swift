@@ -67,20 +67,17 @@ class FLNativeView: NSObject, FlutterPlatformView {
 
     func createNativeView(view _view: UIView,tapCardView: TapCardView){
         _view.backgroundColor = UIColor.clear
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)){
-           // self.tapCardView = TapCardView(frame: .init(x: 0, y: 0, width: self._view.frame.width, height: self._view.frame.height))
-            self._view.addSubview(tapCardView)
-            self._view.bringSubviewToFront(tapCardView)
-            tapCardView.translatesAutoresizingMaskIntoConstraints = false
-                // adjust the constraints MUST
-                NSLayoutConstraint.activate([
-                    tapCardView.leadingAnchor.constraint(equalTo: self._view.leadingAnchor, constant: 0),
-                    tapCardView.trailingAnchor.constraint(equalTo: self._view.trailingAnchor, constant: 0),
-                    tapCardView.centerYAnchor.constraint(equalTo: self._view.centerYAnchor)
-                ])
-            tapCardView.initTapCardSDK(configDict: self._args ??  [:],delegate: self.cardDelegate )
-            
-            print(tapCardView.frame)
-            }
+        // The card view is pinned with Auto Layout, so it follows the container
+        // whenever Flutter sizes it; there is no need to wait before starting the SDK.
+        _view.addSubview(tapCardView)
+        _view.bringSubviewToFront(tapCardView)
+        tapCardView.translatesAutoresizingMaskIntoConstraints = false
+        // adjust the constraints MUST
+        NSLayoutConstraint.activate([
+            tapCardView.leadingAnchor.constraint(equalTo: _view.leadingAnchor, constant: 0),
+            tapCardView.trailingAnchor.constraint(equalTo: _view.trailingAnchor, constant: 0),
+            tapCardView.centerYAnchor.constraint(equalTo: _view.centerYAnchor)
+        ])
+        tapCardView.initTapCardSDK(configDict: _args ?? [:], delegate: cardDelegate)
     }
 }

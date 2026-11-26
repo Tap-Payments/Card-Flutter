@@ -9,6 +9,7 @@
 * Update Card-Android 1.0.13 → 1.0.17: the card form loads faster. The SDK no longer waits for its
   IP lookup before loading the page, reuses the config from the last launch, and no longer loads the
   page twice on the first launch after install.
+* iOS: start the card SDK as soon as the card view is created, instead of 300 ms later.
 
 ## 1.0.23 04-10-2026
 
