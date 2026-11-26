@@ -47,7 +47,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Card-iOS: edf012f329c1f8f0b4f3fab6683db4ad4071fe42
   card_flutter: 294d69f6d514163bd7c8447f52d19bf75fea01ea
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   SharedDataModels-iOS: 03d22b8a256a6ce698180b24d3ff8fefe42707b1
   SwiftEntryKit: 61b5fa36f34a97dd8013e48a7345bc4c4720be9a
   TapCardScannerWebWrapper-iOS: 34ebb3f7118fdc156a51d3e4b79aef4497e0f934
