@@ -16,7 +16,7 @@ A new Flutter project.
   # The same sources are used by Swift Package Manager (card_flutter/Package.swift).
   s.source_files = 'card_flutter/Sources/card_flutter/**/*'
   s.dependency 'Flutter'
-  s.dependency 'Card-iOS', '1.0.9'
+  s.dependency 'Card-iOS', '1.0.10'
   s.platform = :ios, '15.0'
 
   # Flutter.framework does not contain a i386 slice.

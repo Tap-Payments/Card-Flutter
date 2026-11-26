@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Tap-Payments/Card-iOS.git",
       "state" : {
-        "revision" : "a0f901e6e70e03674c943fb2a630d9e9103f7992",
-        "version" : "1.0.9"
+        "revision" : "9d748cc8aa588c69b21cde195e68bd93c2d95fb5",
+        "version" : "1.0.10"
       }
     },
     {

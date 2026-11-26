@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         // Keep in step with the Card-iOS version in ../card_flutter.podspec.
-        .package(url: "https://github.com/Tap-Payments/Card-iOS.git", exact: "1.0.9")
+        .package(url: "https://github.com/Tap-Payments/Card-iOS.git", exact: "1.0.10")
     ],
     targets: [
         .target(
