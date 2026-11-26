@@ -13,9 +13,10 @@ A new Flutter project.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'a.maqbool@tap.company' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  # The same sources are used by Swift Package Manager (card_flutter/Package.swift).
+  s.source_files = 'card_flutter/Sources/card_flutter/**/*'
   s.dependency 'Flutter'
-  s.dependency 'Card-iOS', '1.0.8'
+  s.dependency 'Card-iOS', '1.0.10'
   s.platform = :ios, '15.0'
 
   # Flutter.framework does not contain a i386 slice.

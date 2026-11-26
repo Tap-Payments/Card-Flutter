@@ -1,6 +1,99 @@
 import 'package:card_flutter/card_flutter.dart';
 import 'package:flutter/material.dart';
 
+/// The card configuration, shared by the preload and the card screen. The
+/// preloaded form is only used when both pass equal values.
+const Map<String, dynamic> cardConfiguration = {
+  'operator': {
+    'publicKey': 'pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7',
+  },
+  'scope': 'Token',
+  'order': {
+    'reference': '',
+    'amount': 1,
+    'description': '',
+    'currency': 'KWD',
+    'id': '',
+  },
+  'customer': {
+    'nameOnCard': '',
+    'editable': true,
+    'contact': {
+      'phone': {
+        'number': '011',
+        'countryCode': '+20',
+      },
+      'email': 'test@gmail.com',
+    },
+    'name': [
+      {
+        'middle': 'middle',
+        'last': 'last',
+        'lang': 'en',
+        'first': 'first',
+      }
+    ],
+  },
+  'purpose': 'CHARGE',
+  'transaction': {
+    'metadata': {
+      'id': '',
+    },
+    'paymentAgreement': {
+      'contract': {
+        'id': '',
+      },
+      'id': '',
+    },
+  },
+  'invoice': {
+    'id': '',
+  },
+  'merchant': {
+    'id': '1124340',
+  },
+  'features': {
+    'customerCards': {
+      'saveCard': true,
+      'autoSaveCard': true,
+    },
+    'alternativeCardInputs': {
+      'cardScanner': true,
+      'cardNFC': true,
+    },
+    'acceptanceBadge': true,
+  },
+  'acceptance': {
+    'supportedSchemes': [],
+    'supportedFundSource': [],
+    'supportedPaymentAuthentications': ['3DS'],
+  },
+  'fieldVisibility': {
+    'card': {
+      'cvv': true,
+      'cardHolder': true,
+    },
+  },
+  'interface': {
+    'powered': true,
+    'loader': true,
+    'edges': 'flat',
+    'colorStyle': 'colored',
+    'theme': 'light',
+    'cardDirection': 'dynamic',
+    'locale': 'en',
+  },
+  'redirect': {
+    'url': '',
+  },
+  'post': {
+    'url': '',
+  },
+};
+
+const String prefillCardNumber = "5123450000000008";
+const String prefillCardExpiry = "01/39";
+
 void main() {
   runApp(const MyApp());
 }
@@ -19,7 +112,51 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const CardViewScreen(),
+      home: const HomeScreen(),
+    );
+  }
+}
+
+/// Stands for the screen before payment, for example where the payer picks the
+/// amount. It preloads the card form, so it is ready when the card screen opens.
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _preload();
+  }
+
+  void _preload() {
+    TapCardSDK.preload(
+      sdkConfiguration: cardConfiguration,
+      cardNumber: prefillCardNumber,
+      cardExpiry: prefillCardExpiry,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Plugin example app')),
+      body: Center(
+        child: FilledButton(
+          onPressed: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const CardViewScreen()),
+            );
+            // The form was used; preload a fresh one for the next payment.
+            _preload();
+          },
+          child: const Text('Pay with card'),
+        ),
+      ),
     );
   }
 }
@@ -62,93 +199,7 @@ class _CardViewScreenState extends State<CardViewScreen> {
         children: [
           const Text("hoo hook,"),
           TapCardViewWidget(
-            sdkConfiguration: const {
-              'operator': {
-                'publicKey': 'pk_test_YhUjg9PNT8oDlKJ1aE2fMRz7',
-              },
-              'scope': 'Token',
-              'order': {
-                'reference': '',
-                'amount': 1,
-                'description': '',
-                'currency': 'KWD',
-                'id': '',
-              },
-              'customer': {
-                'nameOnCard': '',
-                'editable': true,
-                'contact': {
-                  'phone': {
-                    'number': '011',
-                    'countryCode': '+20',
-                  },
-                  'email': 'test@gmail.com',
-                },
-                'name': [
-                  {
-                    'middle': 'middle',
-                    'last': 'last',
-                    'lang': 'en',
-                    'first': 'first',
-                  }
-                ],
-              },
-              'purpose': 'CHARGE',
-              'transaction': {
-                'metadata': {
-                  'id': '',
-                },
-                'paymentAgreement': {
-                  'contract': {
-                    'id': '',
-                  },
-                  'id': '',
-                },
-              },
-              'invoice': {
-                'id': '',
-              },
-              'merchant': {
-                'id': '1124340',
-              },
-              'features': {
-                'customerCards': {
-                  'saveCard': true,
-                  'autoSaveCard': true,
-                },
-                'alternativeCardInputs': {
-                  'cardScanner': true,
-                  'cardNFC': true,
-                },
-                'acceptanceBadge': true,
-              },
-              'acceptance': {
-                'supportedSchemes': [],
-                'supportedFundSource': [],
-                'supportedPaymentAuthentications': ['3DS'],
-              },
-              'fieldVisibility': {
-                'card': {
-                  'cvv': true,
-                  'cardHolder': true,
-                },
-              },
-              'interface': {
-                'powered': true,
-                'loader': true,
-                'edges': 'flat',
-                'colorStyle': 'colored',
-                'theme': 'light',
-                'cardDirection': 'dynamic',
-                'locale': 'en',
-              },
-              'redirect': {
-                'url': '',
-              },
-              'post': {
-                'url': '',
-              },
-            },
+            sdkConfiguration: cardConfiguration,
             onReady: () {
               setState(() {
                 showTapTokenButton = true;
@@ -193,8 +244,8 @@ class _CardViewScreenState extends State<CardViewScreen> {
               });
             },
             generateToken: generateToken,
-            cardNumber: "5123450000000008",
-            cardExpiry: "01/39",
+            cardNumber: prefillCardNumber,
+            cardExpiry: prefillCardExpiry,
             showLoading: true,
           ),
           const SizedBox(height: 10),

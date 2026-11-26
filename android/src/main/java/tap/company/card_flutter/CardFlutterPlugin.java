@@ -317,6 +317,16 @@ public class CardFlutterPlugin implements MethodChannel.MethodCallHandler, Flutt
             return;
         }
 
+        if (call.method.equals("preload")) {
+            delegate.preload(activity, new MethodResultWrapper(rawResult), args);
+            return;
+        }
+        if (call.method.equals("cancelPreload")) {
+            delegate.cancelPreload();
+            rawResult.success(null);
+            return;
+        }
+
         result = new MethodResultWrapper(rawResult);
         boolean generateToken = false;
         if (call.method.equals("generateToken")) {

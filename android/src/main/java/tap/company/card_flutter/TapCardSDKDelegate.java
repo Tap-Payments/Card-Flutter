@@ -11,14 +11,11 @@ import androidx.annotation.Nullable;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.logging.LogRecord;
 
 import company.tap.tapcardformkit.open.CardDataConfiguration;
 import company.tap.tapcardformkit.open.TapCardStatusDelegate;
@@ -43,11 +40,14 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
     private MethodCall methodCall;
     private MethodChannel channel;
 
-    boolean onReadyCallbackTriggered = false;
-
-    boolean onHeightChangeCallbackTriggered = true;
-
     private Handler handler = new Handler(Looper.getMainLooper());
+
+    /**
+     * While a preloaded form is not shown yet, its events (onReady, onHeightChange, onError...)
+     * are kept here and replayed once the widget starts listening.
+     */
+    private boolean bufferingEvents = false;
+    private final List<HashMap<String, Object>> bufferedEvents = new ArrayList<>();
 
 
     public TapCardSDKDelegate(Activity _activity) {
@@ -80,17 +80,99 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
                 CardDataConfiguration.INSTANCE.generateToken(tapCardKit);
             } else {
                 assert tapCardConfigurations != null;
-                // Convert to a safer configuration format
-                HashMap<String, Object> safeConfiguration = createSafeConfiguration(tapCardConfigurations);
-                CardDataConfiguration.INSTANCE.initializeSDK(activity1, safeConfiguration, this, tapCardKit, cardNumber, cardExpiry);
-                //  DataConfiguration.INSTANCE.addTapCardStatusDelegate(this);
-
+                TapCardKit preloadedKit = CardHost.takePreload(params);
+                if (preloadedKit != null) {
+                    // Loaded (or loading) already: show it and hand over what happened so far.
+                    CardHost.show(preloadedKit);
+                    flushBufferedEvents();
+                } else {
+                    bufferingEvents = false;
+                    bufferedEvents.clear();
+                    // Convert to a safer configuration format
+                    HashMap<String, Object> safeConfiguration = createSafeConfiguration(tapCardConfigurations);
+                    TapCardKit kit = CardHost.newKit(activity1);
+                    CardHost.show(kit);
+                    CardDataConfiguration.INSTANCE.initializeSDK(activity1, safeConfiguration, this, kit, cardNumber, cardExpiry);
+                }
             }
 
         } catch (Exception e) {
 //            pendingResult.error(String.valueOf(500), e.toString(), new Object());
 //            pendingResult = null;
         }
+    }
+
+    /**
+     * Starts loading the card form for {@code params} before the widget is shown. The widget
+     * picks it up in {@link #start} when it starts with the same arguments.
+     */
+    public void preload(Activity activity1, MethodChannel.Result callback, HashMap<String, Object> params) {
+        this.activity = activity1;
+        try {
+            initializeFirebase(activity1.getApplicationContext());
+            HashMap<String, Object> tapCardConfigurations = (HashMap<String, Object>) params.get("configuration");
+            if (tapCardConfigurations == null) {
+                callback.error("invalid_arguments", "preload needs a configuration", null);
+                return;
+            }
+            String cardNumber = (String) params.get("cardNumber");
+            String cardExpiry = (String) params.get("cardExpiry");
+            HashMap<String, Object> safeConfiguration = createSafeConfiguration(tapCardConfigurations);
+            CardHost.runPreloadWhenNoCardShown(() -> {
+                // Hold events until a widget shows this form; drop those of an earlier preload.
+                bufferingEvents = true;
+                bufferedEvents.clear();
+                TapCardKit kit = CardHost.startPreload(activity1, params);
+                CardDataConfiguration.INSTANCE.initializeSDK(activity1, safeConfiguration, this, kit, cardNumber, cardExpiry);
+            });
+            callback.success(null);
+        } catch (Exception e) {
+            CardHost.cancelPreload();
+            bufferingEvents = false;
+            bufferedEvents.clear();
+            callback.error("preload_failed", e.toString(), null);
+        }
+    }
+
+    public void cancelPreload() {
+        CardHost.cancelPreload();
+        bufferingEvents = false;
+        bufferedEvents.clear();
+    }
+
+    /** Sends an event to the widget, or keeps it while a preloaded form is not shown yet. */
+    private void sendEvent(String key, Object value) {
+        handler.post(() -> {
+            HashMap<String, Object> resultData = new HashMap<>();
+            resultData.put(key, value);
+            if (bufferingEvents) {
+                bufferedEvents.add(resultData);
+                return;
+            }
+            if (eventSink == null) return;
+            try {
+                eventSink.success(resultData);
+            } catch (Throwable throwable) {
+                System.out.println("Exception sending " + key + ": " + throwable);
+            }
+        });
+    }
+
+    /** Replays the events of the preloaded form, in order, then sends new ones directly. */
+    private void flushBufferedEvents() {
+        handler.post(() -> {
+            bufferingEvents = false;
+            List<HashMap<String, Object>> events = new ArrayList<>(bufferedEvents);
+            bufferedEvents.clear();
+            if (eventSink == null) return;
+            for (HashMap<String, Object> resultData : events) {
+                try {
+                    eventSink.success(resultData);
+                } catch (Throwable throwable) {
+                    System.out.println("Exception replaying event: " + throwable);
+                }
+            }
+        });
     }
 
     private void logConfigurationStructure(HashMap<String, Object> config, String prefix) {
@@ -202,211 +284,46 @@ public class TapCardSDKDelegate implements PluginRegistry.ActivityResultListener
 
     @Override
     public void onBindIdentification(@NonNull String s) {
-
-
-        handler.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        HashMap<String, Object> resultData = new HashMap<>();
-                        resultData.put("onBinIdentification", s);
-                        eventSink.success(resultData);
-                    }
-                });
+        sendEvent("onBinIdentification", s);
     }
 
     @Override
     public void onCardError(@NonNull String s) {
-
-        handler.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        HashMap<String, Object> resultData = new HashMap<>();
-                        resultData.put("onError", s);
-                        eventSink.success(resultData);
-                    }
-                });
+        sendEvent("onError", s);
     }
 
     @Override
     public void onCardFocus() {
-        handler.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        HashMap<String, Object> resultData = new HashMap<>();
-                        resultData.put("onFocus", "On Focus Callback Is Executed");
-                        eventSink.success(resultData);
-                    }
-                });
-
+        sendEvent("onFocus", "On Focus Callback Is Executed");
     }
 
     @Override
     public void onHeightChange(@NonNull String s) {
-        handler.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            HashMap<String, Object> resultData = new HashMap<>();
-                            resultData.put("onHeightChange", s);
-                            System.out.println("On Height " + new Timestamp(System.currentTimeMillis()));
-                            eventSink.success(resultData);
-
-                        } catch (IllegalStateException exception) {
-                            // Output expected IllegalStateException.
-                            System.out.println("Exception " + exception);
-                            // Logging.log(exception);
-                        } catch (Throwable throwable) {
-                            // Output unexpected Throwables.
-                            System.out.println("Exception throwable");
-                            // Logging.log(throwable, false);
-                        }
-
-                    }
-                });
-
-
+        sendEvent("onHeightChange", s);
     }
-
 
     @Override
     public void onCardReady() {
-
-        System.out.println("ON READY CALLED  " + onReadyCallbackTriggered);
-        onReadyCallbackTriggered = false;
-        if (!onReadyCallbackTriggered) {
-            handler.post(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                HashMap<String, Object> resultData = new HashMap<>();
-                                resultData.put("onReady", "On Ready Callback Is Executed");
-                                eventSink.success(resultData);
-
-                            } catch (IllegalStateException exception) {
-                                // Output expected IllegalStateException.
-                                System.out.println("Exception " + exception);
-                                // Logging.log(exception);
-                            } catch (Throwable throwable) {
-                                // Output unexpected Throwables.
-                                System.out.println("Exception throwable");
-                                // Logging.log(throwable, false);
-                            }
-
-                        }
-                    });
-            onReadyCallbackTriggered = true;
-        } else {
-            System.out.println("ON READY NEVER FIRED ");
-            new java.util.Timer().schedule(
-                    new java.util.TimerTask() {
-                        @Override
-                        public void run() {
-                            onReadyCallbackTriggered = false;
-                        }
-                    }, 1000
-            );
-        }
-
-
+        sendEvent("onReady", "On Ready Callback Is Executed");
     }
 
     @Override
     public void onCardSuccess(@NonNull String s) {
-
-        handler.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        HashMap<String, Object> resultData = new HashMap<>();
-                        resultData.put("onSuccess", s);
-                        eventSink.success(resultData);
-                    }
-                });
-
+        sendEvent("onSuccess", s);
     }
 
     @Override
     public void onChangeSaveCard(boolean b) {
-        handler.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-                            HashMap<String, Object> resultData = new HashMap<>();
-                            resultData.put("onChangeSaveCard", b);
-                            eventSink.success(resultData);
-
-                        } catch (IllegalStateException exception) {
-                            // Output expected IllegalStateException.
-                            System.out.println("Exception " + exception);
-                            // Logging.log(exception);
-                        } catch (Throwable throwable) {
-                            // Output unexpected Throwables.
-                            System.out.println("Exception throwable");
-                            // Logging.log(throwable, false);
-                        }
-
-
-                    }
-                });
+        sendEvent("onChangeSaveCard", b);
     }
 
     @Override
     public void onValidInput(@NonNull String s) {
-
-//        handler.post(
-//                new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                        try {
-//                            HashMap<String, Object> resultData = new HashMap<>();
-//                            resultData.put("onValidInput", s);
-//                            eventSink.success(resultData);
-//
-//                        } catch (IllegalStateException exception) {
-//                            // Output expected IllegalStateException.
-//                            System.out.println("Exception " + exception);
-//                            // Logging.log(exception);
-//                        } catch (Throwable throwable) {
-//                            // Output unexpected Throwables.
-//                            System.out.println("Exception throwable");
-//                            // Logging.log(throwable, false);
-//                        }
-//                    }
-//                });
-
+        // Not forwarded: onInValidInput reports the same state.
     }
 
     @Override
     public void onInValidInput(boolean b) {
-        handler.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-                            HashMap<String, Object> resultData = new HashMap<>();
-                            resultData.put("onValidInput", !b);
-                            eventSink.success(resultData);
-
-                        } catch (IllegalStateException exception) {
-                            // Output expected IllegalStateException.
-                            System.out.println("Exception " + exception);
-                            // Logging.log(exception);
-                        } catch (Throwable throwable) {
-                            // Output unexpected Throwables.
-                            System.out.println("Exception throwable");
-                            // Logging.log(throwable, false);
-                        }
-                    }
-                });
+        sendEvent("onValidInput", !b);
     }
 }

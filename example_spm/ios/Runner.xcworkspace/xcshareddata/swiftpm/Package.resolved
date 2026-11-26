@@ -1,0 +1,68 @@
+{
+  "pins" : [
+    {
+      "identity" : "card-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Tap-Payments/Card-iOS.git",
+      "state" : {
+        "revision" : "9d748cc8aa588c69b21cde195e68bd93c2d95fb5",
+        "version" : "1.0.10"
+      }
+    },
+    {
+      "identity" : "quicklayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/huri000/QuickLayout",
+      "state" : {
+        "revision" : "6be62decbe508d8fc8f9dbafc349d05bab03c38b",
+        "version" : "3.0.1"
+      }
+    },
+    {
+      "identity" : "shareddatamodels-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Tap-Payments/SharedDataModels-iOS.git",
+      "state" : {
+        "revision" : "16a8c45e33bab5033956270a4f79c662fd187c16",
+        "version" : "0.0.14"
+      }
+    },
+    {
+      "identity" : "swiftentrykit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/huri000/SwiftEntryKit.git",
+      "state" : {
+        "revision" : "c2d42574e4fe4e1f9719843f35add7922942a16b",
+        "version" : "1.2.7"
+      }
+    },
+    {
+      "identity" : "tapcardscannerwebwrapper-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Tap-Payments/TapCardScannerWebWrapper-iOS.git",
+      "state" : {
+        "revision" : "389436b81d1de6aafe43fc61ae4e1f8a8b4accec",
+        "version" : "0.0.6"
+      }
+    },
+    {
+      "identity" : "tapcardvlidatorkit-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Tap-Payments/TapCardVlidatorKit-iOS.git",
+      "state" : {
+        "revision" : "b3550ce30b31ac8eb161ecf9d0c64317032f605b",
+        "version" : "1.0.27"
+      }
+    },
+    {
+      "identity" : "tapfontkit-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Tap-Payments/TapFontKit-iOS.git",
+      "state" : {
+        "revision" : "08cc8c405bddcadbdbecdfac119b5196bf514128",
+        "version" : "0.0.12"
+      }
+    }
+  ],
+  "version" : 2
+}

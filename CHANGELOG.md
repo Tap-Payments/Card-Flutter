@@ -1,3 +1,24 @@
+## Unreleased
+
+* Add `TapCardSDK.preload` and `TapCardSDK.cancelPreload`: load the card form ahead of time, so
+  `TapCardViewWidget` shows it ready as soon as it is built. See "Preload the card form" in the README.
+* iOS: support Swift Package Manager. The plugin now ships `ios/card_flutter/Package.swift`, which
+  pulls in Card-iOS as a Swift package; CocoaPods keeps working from the same sources. See
+  "iOS: Swift Package Manager or CocoaPods" in the README.
+* Add `example_spm`, an example app that uses Swift Package Manager. `example` now opts out of
+  Swift Package Manager to show the CocoaPods setup.
+* Update Card-iOS 1.0.8 → 1.0.10:
+  * Removes a duplicate IP lookup made on every card load.
+  * Sends the Card-iOS version to the server, instead of the app's version, when Card-iOS is
+    linked statically (Swift Package Manager, or CocoaPods without `use_frameworks!`).
+* Update Card-Android 1.0.13 → 1.0.17: the card form loads faster. The SDK no longer waits for its
+  IP lookup before loading the page, reuses the config from the last launch, and no longer loads the
+  page twice on the first launch after install.
+* iOS: start the card SDK as soon as the card view is created, instead of 300 ms later.
+* The card form now shows the `cardNumber` and `cardExpiry` passed to `TapCardViewWidget`. On
+  Android they were set on a form that was never shown; on iOS they were never passed to Card-iOS.
+* `TapCardViewWidget` stops listening to card events when it is disposed.
+
 ## 1.0.23 04-10-2026
 
 * Update Card-iOS 1.0.6 → 1.0.8:

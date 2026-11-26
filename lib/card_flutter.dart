@@ -5,6 +5,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+/// Loads the Tap card form ahead of time, so it is already loaded when a
+/// [TapCardViewWidget] is shown.
+///
+/// Loading the form takes a few seconds (the SDK configuration, the card web page
+/// and its script). Call [preload] on an earlier screen, for example the screen
+/// where the payer picks the amount, with the same values you will pass to
+/// [TapCardViewWidget]. When the widget is then built with an equal
+/// `sdkConfiguration`, `cardNumber` and `cardExpiry`, it
+/// shows the preloaded form instead of starting a new load, and `onReady` fires
+/// as soon as the form is ready, right away if it already is.
+///
+/// If the widget is built with different values, the preloaded form is dropped
+/// and the widget loads the form as usual, so a stale preload never shows the
+/// wrong amount or currency.
+///
+/// There is one card form per app: preload while no [TapCardViewWidget] is on
+/// screen, and calling [preload] again replaces the previous preload.
+class TapCardSDK {
+  TapCardSDK._();
+
+  static const MethodChannel _channel = MethodChannel('card_flutter');
+
+  /// Starts loading the card form for [sdkConfiguration] in the background.
+  static Future<void> preload({
+    required Map<String, dynamic> sdkConfiguration,
+    String? cardNumber,
+    String? cardExpiry,
+  }) {
+    return _channel.invokeMethod<void>('preload', {
+      "configuration": sdkConfiguration,
+      "cardNumber": cardNumber ?? "",
+      "cardExpiry": cardExpiry ?? "",
+    });
+  }
+
+  /// Drops a preloaded card form that will not be shown.
+  static Future<void> cancelPreload() {
+    return _channel.invokeMethod<void>('cancelPreload');
+  }
+}
+
 class TapCardViewWidget extends StatefulWidget {
   final Function()? onReady, onFocus;
   final Function(String?)? onSuccess,
@@ -60,9 +101,12 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
   late Animation<double> _shimmerAnimation;
   Timer? _heightDebounceTimer;
   double? _pendingHeight;
+  StreamSubscription<dynamic>? _eventSubscription;
 
   void streamTimeFromNative() {
-    _eventChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
+    _eventSubscription = _eventChannel
+        .receiveBroadcastStream()
+        .listen(_onEvent, onError: _onError);
   }
 
   void _onEvent(dynamic event) {
@@ -147,6 +191,7 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
   }
 
   handleCallbacks(dynamic result) {
+    if (!mounted) return;
     if (result.containsKey("onHeightChange")) {
       _pendingHeight = double.parse(result["onHeightChange"].toString()) + 10;
 
@@ -216,6 +261,9 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
 
   @override
   void dispose() {
+    // Stop listening, so events of a later card form (or of a preload) never
+    // reach this widget once it is gone.
+    _eventSubscription?.cancel();
     _shimmerController.dispose();
     _heightDebounceTimer?.cancel();
     super.dispose();
@@ -317,7 +365,11 @@ class _TapCardViewWidgetState extends State<TapCardViewWidget>
     } else {
       platformView = UiKitView(
         viewType: "plugin/tap_card_sdk",
-        creationParams: widget.sdkConfiguration,
+        creationParams: {
+          "configuration": widget.sdkConfiguration,
+          "cardNumber": widget.cardNumber ?? "",
+          "cardExpiry": widget.cardExpiry ?? "",
+        },
         layoutDirection: TextDirection.ltr,
         creationParamsCodec: const StandardMessageCodec(),
       );

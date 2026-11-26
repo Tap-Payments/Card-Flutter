@@ -45,7 +45,26 @@ In your library add the following import:
 
 `import 'package:card_flutter/card_flutter.dart';`
 
+### iOS: Swift Package Manager or CocoaPods
 
+On iOS the plugin supports both **Swift Package Manager** and **CocoaPods**, and pulls in the
+Card-iOS SDK through whichever one your app uses. Flutter picks it for you:
+
+- **Swift Package Manager** is used when it is enabled in Flutter (the default in recent Flutter
+  releases). Nothing else to set up.
+- **CocoaPods** is used when Swift Package Manager is turned off, either for your machine with
+  `flutter config --no-enable-swift-package-manager`, or for one app in its `pubspec.yaml`:
+
+  ```yaml
+  flutter:
+    config:
+      enable-swift-package-manager: false
+  ```
+
+  Your app's `ios/Podfile` needs `platform :ios, '15.0'` or higher.
+
+Two example apps show each setup: [`example`](example) uses CocoaPods and
+[`example_spm`](example_spm) uses Swift Package Manager.
 
 # Step 4: Integrating Card-Flutter[](https://developers.tap.company/docs/card-sdk-flutter#step-4--integrating-card-flutter)
 
@@ -251,6 +270,10 @@ State<CardViewScreen> createState() => _CardViewScreenState(); }
 
 Following the above code samples, once the TapCardViewWidget now has a valid input, you will be able to start the tokenization process by changing the stateful variable `generateToken` to true as we declared above, which you can find by following  [Step 5 - Tokenize the card](https://developers.tap.company/docs/flutter-card-sdk#step-5-tokenize-the-card).
 
+### Preload the card form
+
+To show the card form instantly when your payment screen opens, preload it from an earlier screen. See [Step 6: Preload the card form (optional)](#step-6-preload-the-card-form-optional).
+
 ## Advanced Integration
 
 [](https://developers.tap.company/docs/card-sdk-flutter#advanced-integration)
@@ -415,6 +438,100 @@ The Card-Flutter SDK provides a stateful variable, that allows you to instruct i
 >
 > Also, once you correctly trigger the interface, you should expect to hear back from the SDK in one of two callbacks, onSuccess or onError.
 
+
+
+# Step 6: Preload the card form (optional)
+
+Preload the card form from an earlier screen, so it is already loaded when the payment screen opens.
+
+## Usage
+
+1. Build the configuration in one place, so the preload and the widget always get the same values.
+2. Call `TapCardSDK.preload` as early as you can, with that configuration.
+3. Build `TapCardViewWidget` with the same configuration as usual. Nothing else changes in the widget.
+
+```dart
+import 'package:card_flutter/card_flutter.dart';
+import 'package:flutter/material.dart';
+
+/// One place that builds the configuration, used by both screens.
+Map<String, dynamic> buildCardConfiguration(double amount) => {
+      'operator': {'publicKey': 'pk_test_...'},
+      'scope': 'Token',
+      'purpose': 'CHARGE',
+      'merchant': {'id': 'YOUR_MERCHANT_ID'},
+      'order': {
+        'id': '',
+        'amount': amount,
+        'currency': 'KWD',
+        'description': '',
+        'reference': '',
+      },
+      // ... the rest of your configuration
+    };
+
+/// The screen before payment.
+class AmountScreen extends StatefulWidget {
+  const AmountScreen({super.key});
+
+  @override
+  State<AmountScreen> createState() => _AmountScreenState();
+}
+
+class _AmountScreenState extends State<AmountScreen> {
+  double amount = 10;
+
+  @override
+  void initState() {
+    super.initState();
+    // Start loading the card form while the payer is still on this screen.
+    TapCardSDK.preload(sdkConfiguration: buildCardConfiguration(amount));
+  }
+
+  void _onAmountChanged(double newAmount) {
+    setState(() => amount = newAmount);
+    // The amount is part of the configuration: preload again with the new one.
+    TapCardSDK.preload(sdkConfiguration: buildCardConfiguration(newAmount));
+  }
+
+  Future<void> _openPayment() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => PaymentScreen(amount: amount)),
+    );
+    // A preloaded form is used once. Preload again for the next payment.
+    TapCardSDK.preload(sdkConfiguration: buildCardConfiguration(amount));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // ... your amount UI, calling _onAmountChanged and _openPayment
+    return const SizedBox();
+  }
+}
+
+/// The payment screen: unchanged, except that it uses the same configuration.
+class PaymentScreen extends StatelessWidget {
+  const PaymentScreen({super.key, required this.amount});
+
+  final double amount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: TapCardViewWidget(
+        sdkConfiguration: buildCardConfiguration(amount),
+        generateToken: false,
+        showLoading: true,
+        onReady: () {},
+        onSuccess: (token) {},
+        onError: (error) {},
+      ),
+    );
+  }
+}
+```
+
+The [example app](example/lib/main.dart) shows the same flow: its first screen preloads and the "Pay with card" button opens the card screen.
 
 # Parameters Reference[](https://developers.tap.company/docs/card-sdk-flutter#parameters-reference)
 
