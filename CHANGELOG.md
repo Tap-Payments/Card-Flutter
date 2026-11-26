@@ -1,5 +1,10 @@
 ## Unreleased
 
+* iOS: support Swift Package Manager. The plugin now ships `ios/card_flutter/Package.swift`, which
+  pulls in Card-iOS as a Swift package; CocoaPods keeps working from the same sources. See
+  "iOS: Swift Package Manager or CocoaPods" in the README.
+* Add `example_spm`, an example app that uses Swift Package Manager. `example` now opts out of
+  Swift Package Manager to show the CocoaPods setup.
 * Update Card-iOS 1.0.8 → 1.0.9: removes a duplicate IP lookup made on every card load.
 * Update Card-Android 1.0.13 → 1.0.17: the card form loads faster. The SDK no longer waits for its
   IP lookup before loading the page, reuses the config from the last launch, and no longer loads the

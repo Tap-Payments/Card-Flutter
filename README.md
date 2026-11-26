@@ -45,7 +45,26 @@ In your library add the following import:
 
 `import 'package:card_flutter/card_flutter.dart';`
 
+### iOS: Swift Package Manager or CocoaPods
 
+On iOS the plugin supports both **Swift Package Manager** and **CocoaPods**, and pulls in the
+Card-iOS SDK through whichever one your app uses. Flutter picks it for you:
+
+- **Swift Package Manager** is used when it is enabled in Flutter (the default in recent Flutter
+  releases). Nothing else to set up.
+- **CocoaPods** is used when Swift Package Manager is turned off, either for your machine with
+  `flutter config --no-enable-swift-package-manager`, or for one app in its `pubspec.yaml`:
+
+  ```yaml
+  flutter:
+    config:
+      enable-swift-package-manager: false
+  ```
+
+  Your app's `ios/Podfile` needs `platform :ios, '15.0'` or higher.
+
+Two example apps show each setup: [`example`](example) uses CocoaPods and
+[`example_spm`](example_spm) uses Swift Package Manager.
 
 # Step 4: Integrating Card-Flutter[](https://developers.tap.company/docs/card-sdk-flutter#step-4--integrating-card-flutter)
 

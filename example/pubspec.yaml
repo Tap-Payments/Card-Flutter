@@ -45,6 +45,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  # This example shows the CocoaPods integration on iOS, so it opts out of
+  # Swift Package Manager. See example_spm for the Swift Package Manager one.
+  config:
+    enable-swift-package-manager: false
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
