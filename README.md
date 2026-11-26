@@ -442,16 +442,7 @@ The Card-Flutter SDK provides a stateful variable, that allows you to instruct i
 
 # Step 6: Preload the card form (optional)
 
-Loading the card form takes a few seconds: the SDK configuration, the card web page and its script. Without preloading, the payer sees a loading shimmer for that whole time every time the payment screen opens.
-
-`TapCardSDK.preload` starts that load earlier, while the payer is still on a previous screen (for example, where they pick the amount). When `TapCardViewWidget` is then built with the same configuration, it shows the form that is already loaded, and `onReady` fires straight away.
-
-Measured with the example app on an Android emulator and iOS simulators (debug build, Flutter 3.47), time from tapping the button that opens the payment screen to `onReady`:
-
-| | Without preload | With a finished preload |
-|---|---|---|
-| Android (Card-Android 1.0.17) | about 1.1–1.5 s | about 0.04–0.13 s |
-| iOS (Card-iOS 1.0.9) | about 1.4–2.4 s | about 0.02–0.04 s |
+Preload the card form from an earlier screen, so it is already loaded when the payment screen opens.
 
 ## Usage
 
@@ -541,28 +532,6 @@ class PaymentScreen extends StatelessWidget {
 ```
 
 The [example app](example/lib/main.dart) shows the same flow: its first screen preloads and the "Pay with card" button opens the card screen.
-
-## When is the preloaded form used?
-
-The widget uses the preloaded form only when it is built with an **equal** `sdkConfiguration`, compared value by value, including the amount and currency. On Android, `cardNumber` and `cardExpiry` must match too.
-
-If anything differs, the preload is dropped and the widget loads the form as it would without preloading, so a stale preload never shows the wrong amount or currency. So when a value changes (for example the payer edits the amount), call `preload` again with the new configuration.
-
-If the payment screen opens before the preload has finished, the widget takes over the form that is still loading, and the payer only waits for the rest of the load.
-
-## API
-
-| Method | Description |
-|---|---|
-| `TapCardSDK.preload({required Map<String, dynamic> sdkConfiguration, String? cardNumber, String? cardExpiry})` | Starts loading the card form in the background. Calling it again replaces the previous preload. |
-| `TapCardSDK.cancelPreload()` | Drops a preloaded form that will not be shown, for example when the payer leaves the checkout flow. |
-
-## Good to know
-
-- **One card form per app.** Preload while no `TapCardViewWidget` is on screen. On Android, a preload asked for while a card is still on screen starts once that card is gone.
-- **Each preload is used once.** After the payment screen closes, call `preload` again if the payer may pay again.
-- **Callbacks are not lost.** Events the form sends while preloading (`onReady`, `onHeightChange`, `onError`, ...) are kept and delivered to the widget once it is shown.
-- **iOS:** the form loads in your app's window, outside the visible screen, because iOS does not finish loading a web view that is not in a window. Only `sdkConfiguration` is compared on iOS.
 
 # Parameters Reference[](https://developers.tap.company/docs/card-sdk-flutter#parameters-reference)
 
