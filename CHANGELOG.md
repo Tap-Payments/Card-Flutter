@@ -1,3 +1,7 @@
+## Unreleased
+
+* Update Card-iOS 1.0.8 → 1.0.9: removes a duplicate IP lookup made on every card load.
+
 ## 1.0.23 04-10-2026
 
 * Update Card-iOS 1.0.6 → 1.0.8:
